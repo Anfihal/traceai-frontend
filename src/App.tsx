@@ -22,17 +22,15 @@ import { useSession } from "./hooks/useSession";
 function App() {
   const { step, alert, setAlert, sessionId } = useInvestigationStore();
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState("Расследование");
   const tabs = t("tabs", { returnObjects: true }) as string[];
+  const [activeTab, setActiveTab] = useState(tabs[0] || "Расследование");
 
-  // Старт сессии при монтировании
   const { mutate: startSession, isPending: isSessionLoading } = useSession();
 
   useEffect(() => {
     startSession();
   }, []);
 
-  // Установка дефолтного алерта, если ещё не установлен и сессия есть
   useEffect(() => {
     if (!alert && sessionId) {
       setAlert({
@@ -49,22 +47,15 @@ function App() {
 
   const renderInvestigationContent = () => {
     switch (step) {
-      case 0:
-        return <AlertCard />;
-      case 1:
-        return <ContextView />;
-      case 2:
-        return <HypothesisTree />;
-      case 3:
-        return <ArtifactsTable />;
-      case 4:
-        return <ReportView />;
-      default:
-        return null;
+      case 0: return <AlertCard />;
+      case 1: return <ContextView />;
+      case 2: return <HypothesisTree />;
+      case 3: return <ArtifactsTable />;
+      case 4: return <ReportView />;
+      default: return null;
     }
   };
 
-  // Пока загружается сессия, показываем спиннер
   if (isSessionLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -84,24 +75,12 @@ function App() {
           <div className="mt-6">
             <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab}>
               <TabsContent value={tabs[0]}>{renderInvestigationContent()}</TabsContent>
-              <TabsContent value={tabs[1]}>
-                <FindingsLog />
-              </TabsContent>
-              <TabsContent value={tabs[2]}>
-                <SearchTab />
-              </TabsContent>
-              <TabsContent value={tabs[3]}>
-                <TipsTab />
-              </TabsContent>
-              <TabsContent value={tabs[4]}>
-                <ChatAssistant />
-              </TabsContent>
-              <TabsContent value={tabs[5]}>
-                <GraphTab />
-              </TabsContent>
-              <TabsContent value={tabs[6]}>
-                <DataTab />
-              </TabsContent>
+              <TabsContent value={tabs[1]}><FindingsLog /></TabsContent>
+              <TabsContent value={tabs[2]}><SearchTab /></TabsContent>
+              <TabsContent value={tabs[3]}><TipsTab /></TabsContent>
+              <TabsContent value={tabs[4]}><ChatAssistant /></TabsContent>
+              <TabsContent value={tabs[5]}><GraphTab /></TabsContent>
+              <TabsContent value={tabs[6]}><DataTab /></TabsContent>
             </TabsNavigation>
           </div>
         </div>

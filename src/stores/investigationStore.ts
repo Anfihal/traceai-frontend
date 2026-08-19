@@ -15,7 +15,6 @@ interface InvestigationState {
     isLoading: boolean;
     error: string | null;
 
-    // Setters
     setSessionId: (id: string) => void;
     setStep: (step: number) => void;
     setAlert: (alert: Alert) => void;

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { sessionApi } from '../api/session';
+import { apiClient } from '../api/client';
 import { useInvestigationStore } from '../stores/investigationStore';
 
 export const useSession = () => {
@@ -7,7 +7,7 @@ export const useSession = () => {
 
     return useMutation({
         mutationFn: async () => {
-            const response = await sessionApi.start();
+            const response = await apiClient.post('/session/start');
             return response.data;
         },
         onSuccess: (data) => {

@@ -1,14 +1,12 @@
-// src/types/index.ts
-
 export interface Alert {
     id?: string;
     rule?: string;
     process?: string;
     command_line?: string;
     node?: string;
-    user: string;               // обязательно (демо-данные всегда есть)
-    src_ip: string;             // обязательно
-    dst_ip: string;             // обязательно
+    user: string;
+    src_ip: string;
+    dst_ip: string;
     host?: {
         name: string;
         groups?: string[];
@@ -27,7 +25,7 @@ export interface Context {
         port: number;
         geo: {
             country: string;
-            asn: number;            // число (как в бэкенде)
+            asn: number;
             org: string;
         };
     };
@@ -63,7 +61,7 @@ export interface Hypothesis {
     evidence_for: string[];
     evidence_against: string[];
     status: string;
-    att_ck: string[];           // массив – может быть пустым
+    att_ck: string[];
     llm_comment?: string;
 }
 

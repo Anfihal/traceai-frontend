@@ -9,7 +9,8 @@ interface TabsNavigationProps {
 
 export const TabsNavigation = ({ children, activeTab, onTabChange }: TabsNavigationProps) => {
     const { t } = useTranslation();
-    const tabs = t("tabs", { returnObjects: true }) as string[];
+    const tabsRaw = t("tabs", { returnObjects: true });
+    const tabs = Array.isArray(tabsRaw) ? tabsRaw : ["Расследование", "Журнал находок", "Поиск", "Подсказки", "Чат-ассистент", "Граф связей", "Данные"];
 
     return (
         <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">

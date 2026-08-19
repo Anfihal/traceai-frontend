@@ -1,18 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
-import { alertApi } from '../api/alert';
-import { useInvestigationStore } from '../stores/investigationStore';
-import { Alert } from '../types';
+import { apiClient } from '@/api/client';
+import { useInvestigationStore } from '@/stores/investigationStore';
+import { Alert } from '@/types';
 
 export const useAlert = () => {
-    const { sessionId, addAction } = useInvestigationStore();
+    const { sessionId, setAlert, setStep, addAction } = useInvestigationStore();
 
     return useMutation({
         mutationFn: async (alert: Alert) => {
             if (!sessionId) throw new Error('Session not started');
-            const response = await alertApi.set(sessionId, alert);
+            const response = await apiClient.post(`/session/${sessionId}/alert`, alert);
             return response.data;
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
+            setAlert(data.alert);
+            setStep(0);
             addAction('Алерт установлен');
         },
         onError: (error) => {
