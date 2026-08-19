@@ -14,7 +14,7 @@ export const useAlert = () => {
         },
         onSuccess: (data) => {
             setAlert(data.alert);
-            setStep(0);
+            setStep(1);  // <-- переключаем на шаг сбора контекста
             addAction('Алерт установлен');
         },
         onError: (error) => {
