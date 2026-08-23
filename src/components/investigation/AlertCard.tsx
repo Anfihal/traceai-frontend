@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button';
 import { useAlert } from '@/hooks/useAlert';
 
 export const AlertCard = () => {
-    const { alert } = useInvestigationStore(); // убрали setStep и addAction
+    const { alert } = useInvestigationStore();
     const { t } = useTranslation();
     const { mutate: sendAlert, isPending, error } = useAlert();
 
     if (!alert) return null;
 
-    const handleCollectContext = () => {
+    const handleStartInvestigation = () => {
         sendAlert(alert);
     };
 
@@ -38,7 +38,7 @@ export const AlertCard = () => {
                     </span>
                 </div>
 
-                {/* Детали – сетка с улучшенными отступами */}
+                {/* Детали */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
                     <div className="flex items-center gap-2">
                         <span className="font-medium text-sm shrink-0">{t('src_ip')}:</span>
@@ -76,11 +76,11 @@ export const AlertCard = () => {
                 {/* Кнопка действия */}
                 <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
                     <Button
-                        onClick={handleCollectContext}
+                        onClick={handleStartInvestigation}
                         className="w-full sm:w-auto h-11 px-6 text-base"
                         disabled={isPending}
                     >
-                        {isPending ? '⏳ Загрузка...' : t('run_context')}
+                        {isPending ? '⏳ Загрузка...' : 'Начать расследование'}
                     </Button>
                     <span className="text-xs text-muted-foreground text-center sm:text-left">
                         {t('context_info')}

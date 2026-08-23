@@ -1,16 +1,36 @@
 import { useContextCollection } from '@/hooks/useContextCollection';
 import { useInvestigationStore } from '@/stores/investigationStore';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
 
 export const ContextView = () => {
-    const { context } = useInvestigationStore(); // убрали step
+    const { context, step } = useInvestigationStore();
     const { mutate: gatherContext, isPending, error } = useContextCollection();
 
-    const handleGather = () => {
+    // Автоматический сбор при переходе на шаг 1 (если контекст ещё не собран)
+    useEffect(() => {
+        if (step === 1 && !context && !isPending) {
+            gatherContext({
+                llmConfig: {},
+                ragMode: false,
+            });
+        }
+    }, [step, context, isPending, gatherContext]);
+
+    const handleRetry = () => {
         gatherContext({
             llmConfig: {},
             ragMode: false,
         });
+    };
+
+    const handleBack = () => {
+        useInvestigationStore.getState().setStep(0);
+    };
+
+    const handleGoToHypotheses = () => {
+        useInvestigationStore.getState().setStep(2);
     };
 
     if (isPending) {
@@ -26,7 +46,7 @@ export const ContextView = () => {
         return (
             <div className="bg-destructive/10 text-destructive p-4 rounded-md">
                 Ошибка сбора контекста: {error.message}
-                <button onClick={handleGather} className="ml-4 underline">Повторить</button>
+                <button onClick={handleRetry} className="ml-4 underline">Повторить</button>
             </div>
         );
     }
@@ -35,9 +55,9 @@ export const ContextView = () => {
         return (
             <div className="text-center p-8">
                 <p className="text-muted-foreground">Контекст ещё не собран.</p>
-                <button onClick={handleGather} className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md">
+                <Button onClick={handleRetry} className="mt-4">
                     Запустить сбор контекста
-                </button>
+                </Button>
             </div>
         );
     }
@@ -61,6 +81,16 @@ export const ContextView = () => {
             </div>
             <p><strong>Команда:</strong> <code>{context.cmd.slice(0, 80)}...</code></p>
             <p><strong>Соседние алерты:</strong> {context.neighbor_alerts.length} записей</p>
+
+            {/* Кнопки навигации */}
+            <div className="mt-6 flex flex-wrap gap-4">
+                <Button variant="outline" onClick={handleBack}>
+                    ← Назад к алерту
+                </Button>
+                <Button onClick={handleGoToHypotheses}>
+                    Сгенерировать гипотезы →
+                </Button>
+            </div>
         </div>
     );
 };
