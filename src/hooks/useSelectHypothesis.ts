@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '../api/client';
-import { useInvestigationStore } from '../stores/investigationStore';
+import { apiClient } from '@/api/client';
+import { useInvestigationStore } from '@/stores/investigationStore';
 
 export const useSelectHypothesis = () => {
     const { sessionId, setSelectedHypothesisId, setStep, addAction } = useInvestigationStore();

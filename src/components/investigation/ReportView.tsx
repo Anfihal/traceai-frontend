@@ -1,40 +1,67 @@
-import { useInvestigationStore } from "@/stores/investigationStore";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { useReport } from '@/hooks/useReport';
+import { useInvestigationStore } from '@/stores/investigationStore';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const ReportView = () => {
-    const { report, setStep, addAction } = useInvestigationStore();
-    const { t } = useTranslation();
+    const { report, setStep } = useInvestigationStore(); // убрали step
+    const { mutate: generateReport, isPending, error } = useReport();
 
-    const handleDownload = () => {
-        if (report) {
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'incident_report.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-            addAction(t("export_report"));
-        }
+    const handleGenerate = () => {
+        generateReport();
     };
 
-    return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <h2 className="text-2xl font-bold">{t("report")}</h2>
-
-            <Card>
-                <CardContent className="p-6 whitespace-pre-wrap font-mono text-sm bg-muted/30 rounded-lg">
-                    {report || 'Отчёт ещё не сгенерирован.'}
-                </CardContent>
-            </Card>
-
-            <div className="flex flex-wrap gap-4">
-                <Button onClick={handleDownload} disabled={!report}>{t("download_report")}</Button>
-                <Button variant="outline" onClick={() => setStep(3)}>{t("back_to_response")}</Button>
+    if (isPending) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="ml-2">Генерация отчёта...</span>
             </div>
-        </motion.div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-destructive/10 text-destructive p-4 rounded-md">
+                Ошибка генерации отчёта: {error.message}
+                <button onClick={handleGenerate} className="ml-4 underline">Повторить</button>
+            </div>
+        );
+    }
+
+    if (!report) {
+        return (
+            <div className="text-center p-8">
+                <p className="text-muted-foreground">Отчёт ещё не сформирован.</p>
+                <Button onClick={handleGenerate} className="mt-4">
+                    Сформировать отчёт
+                </Button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Отчёт по инциденту</h3>
+            <div className="bg-muted p-4 rounded-md whitespace-pre-wrap font-mono text-sm">
+                {report}
+            </div>
+            <div className="flex gap-4">
+                <Button variant="outline" onClick={() => setStep(3)}>
+                    ← Назад к реагированию
+                </Button>
+                <Button onClick={() => {
+                    const blob = new Blob([report], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'incident_report.txt';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }}>
+                    Скачать отчёт
+                </Button>
+            </div>
+        </div>
     );
 };

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { artifactsApi } from '../api/artifacts';
-import { useInvestigationStore } from '../stores/investigationStore';
+import { artifactsApi } from '@/api/artifacts';
+import { useInvestigationStore } from '@/stores/investigationStore';
 
 export const useArtifacts = () => {
     const { sessionId, setArtifacts, addAction } = useInvestigationStore();

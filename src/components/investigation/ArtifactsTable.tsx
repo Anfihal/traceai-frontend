@@ -1,76 +1,143 @@
-import { useInvestigationStore } from "@/stores/investigationStore";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
+import { useEffect } from 'react';
+import { useArtifacts } from '@/hooks/useArtifacts';
+import { useInvestigationStore } from '@/stores/investigationStore';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const ArtifactsTable = () => {
-    const { artifacts, setStep, addFinding, addAction } = useInvestigationStore();
-    const { t } = useTranslation();
+    const { artifacts, step, setStep } = useInvestigationStore();
+    const { mutate: getArtifacts, isPending, error } = useArtifacts();
 
-    if (!artifacts) {
-        return <div className="text-center py-12 text-muted-foreground">Нет артефактов</div>;
+    useEffect(() => {
+        if (step === 3 && !artifacts && !isPending) {
+            getArtifacts();
+        }
+    }, [step, artifacts, isPending, getArtifacts]);
+
+    const handleRefresh = () => {
+        getArtifacts();
+    };
+
+    if (isPending) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <span className="ml-2">Загрузка артефактов...</span>
+            </div>
+        );
     }
 
-    const rows = [
-        { label: "IP для блокировки", value: artifacts.ips_to_block.join(', ') },
-        { label: "Хэши", value: artifacts.hashes.join(', ') },
-        { label: "Процессы", value: artifacts.processes.join(', ') },
-        { label: "Пользователи", value: artifacts.users_to_investigate.join(', ') },
-        { label: "Хосты", value: artifacts.hosts.join(', ') },
-    ];
+    if (error) {
+        return (
+            <div className="bg-destructive/10 text-destructive p-4 rounded-md">
+                Ошибка получения артефактов: {error.message}
+                <button onClick={handleRefresh} className="ml-4 underline">Повторить</button>
+            </div>
+        );
+    }
 
-    const handleSaveArtifacts = () => {
-        artifacts.ips_to_block.forEach(ip => addFinding({ type: "C2 IP", value: ip, comment: "Блокировка" }));
-        artifacts.hashes.forEach(h => addFinding({ type: "Хэш", value: h, comment: "Блокировка" }));
-        addAction(t("save_artifacts"));
-    };
+    if (!artifacts) {
+        return (
+            <div className="text-center p-8">
+                <p className="text-muted-foreground">Артефакты ещё не подготовлены.</p>
+                <Button onClick={handleRefresh} className="mt-4">
+                    Получить артефакты
+                </Button>
+            </div>
+        );
+    }
 
-    const handleGenerateReport = () => {
-        setStep(4);
-        addAction(t("generate_report"));
-    };
+    const hasArtifacts = artifacts.ips_to_block?.length > 0 || artifacts.hashes?.length > 0;
+
+    if (!hasArtifacts) {
+        return (
+            <div className="text-center p-8">
+                <p className="text-muted-foreground">Для выбранной гипотезы артефакты не требуются.</p>
+            </div>
+        );
+    }
 
     return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <h2 className="text-2xl font-bold">{t("response_preparation")}</h2>
+        <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Подготовка реагирования</h3>
 
             {artifacts.warning && (
-                <div className="bg-warning/10 border border-warning/20 p-3 rounded text-warning text-sm">
-                    <AlertTriangle className="inline w-4 h-4 mr-2" /> {artifacts.warning}
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-md">
+                    ⚠️ {artifacts.warning}
                 </div>
             )}
 
-            <Card>
-                <CardHeader><CardTitle>{t("artifact_table")}</CardTitle></CardHeader>
-                <CardContent>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="border-b">
-                                    <th className="text-left py-2 font-medium">Тип</th>
-                                    <th className="text-left py-2 font-medium">Значение</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows.map((row) => (
-                                    <tr key={row.label} className="border-b last:border-none">
-                                        <td className="py-2 pr-4 font-medium">{row.label}</td>
-                                        <td className="py-2 break-all">{row.value || '—'}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <div className="flex flex-wrap gap-4">
-                <Button onClick={handleSaveArtifacts}>{t("save_artifacts")}</Button>
-                <Button onClick={handleGenerateReport}>{t("generate_report")}</Button>
-                <Button variant="outline" onClick={() => setStep(2)}>{t("back_to_hypotheses")}</Button>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-muted">
+                            <th className="text-left p-2 border">Тип</th>
+                            <th className="text-left p-2 border">Значения</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {artifacts.ips_to_block && artifacts.ips_to_block.length > 0 && (
+                            <tr>
+                                <td className="p-2 border font-medium">IP для блокировки</td>
+                                <td className="p-2 border">
+                                    {artifacts.ips_to_block.map((ip, idx) => (
+                                        <code key={idx} className="bg-muted px-1 rounded mr-1">{ip}</code>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                        {artifacts.hashes && artifacts.hashes.length > 0 && (
+                            <tr>
+                                <td className="p-2 border font-medium">Хэши</td>
+                                <td className="p-2 border">
+                                    {artifacts.hashes.map((hash, idx) => (
+                                        <code key={idx} className="bg-muted px-1 rounded mr-1 text-xs">{hash}</code>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                        {artifacts.processes && artifacts.processes.length > 0 && (
+                            <tr>
+                                <td className="p-2 border font-medium">Процессы</td>
+                                <td className="p-2 border">
+                                    {artifacts.processes.map((proc, idx) => (
+                                        <span key={idx} className="bg-muted px-1 rounded mr-1">{proc}</span>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                        {artifacts.users_to_investigate && artifacts.users_to_investigate.length > 0 && (
+                            <tr>
+                                <td className="p-2 border font-medium">Учётные записи</td>
+                                <td className="p-2 border">
+                                    {artifacts.users_to_investigate.map((user, idx) => (
+                                        <span key={idx} className="bg-muted px-1 rounded mr-1">{user}</span>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                        {artifacts.hosts && artifacts.hosts.length > 0 && (
+                            <tr>
+                                <td className="p-2 border font-medium">Хосты</td>
+                                <td className="p-2 border">
+                                    {artifacts.hosts.map((host, idx) => (
+                                        <span key={idx} className="bg-muted px-1 rounded mr-1">{host}</span>
+                                    ))}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
-        </motion.div>
+
+            <div className="flex gap-4 mt-4">
+                <Button variant="outline" onClick={() => setStep(2)}>
+                    ← Назад к гипотезам
+                </Button>
+                <Button onClick={() => setStep(4)}>
+                    Перейти к отчёту →
+                </Button>
+            </div>
+        </div>
     );
 };

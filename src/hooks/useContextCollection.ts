@@ -1,6 +1,7 @@
+// src/hooks/useContextCollection.ts
 import { useMutation } from '@tanstack/react-query';
-import { contextApi } from '../api/context';
-import { useInvestigationStore } from '../stores/investigationStore';
+import { contextApi } from '@/api/context';
+import { useInvestigationStore } from '@/stores/investigationStore';
 
 export const useContextCollection = () => {
     const { sessionId, setContext, setStep, addAction } = useInvestigationStore();
@@ -13,7 +14,7 @@ export const useContextCollection = () => {
         },
         onSuccess: (data) => {
             setContext(data.context);
-            setStep(1);
+            setStep(2);   // <-- ДОЛЖНО БЫТЬ 2 (не 1)
             addAction('Контекст собран');
         },
         onError: (error) => {

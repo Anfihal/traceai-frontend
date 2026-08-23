@@ -5,7 +5,7 @@ import { TabsNavigation } from "./components/layout/TabsNavigation";
 import { TabsContent } from "@/components/ui/tabs";
 import { AlertCard } from "./components/investigation/AlertCard";
 import { ContextView } from "./components/investigation/ContextView";
-import { HypothesisTree } from "./components/investigation/HypothesisTree";
+import HypothesisTree from "./components/investigation/HypothesisTree";
 import { ArtifactsTable } from "./components/investigation/ArtifactsTable";
 import { ReportView } from "./components/investigation/ReportView";
 import { FindingsLog } from "./components/findings/FindingsLog";
