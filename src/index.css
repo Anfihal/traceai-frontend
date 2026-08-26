@@ -157,3 +157,13 @@ select,
     padding-bottom: max(env(safe-area-inset-bottom), 16px);
   }
 }
+
+/* Скрываем скроллбар, но оставляем возможность прокрутки */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,7 +1,9 @@
+// src/components/layout/MainLayout.tsx
 import { ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileBreadcrumbs } from './MobileBreadcrumbs';
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +42,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                 <Sidebar />
                 <main className="flex-1 p-4 sm:p-6 overflow-y-auto max-w-full">
                     <div className="max-w-6xl mx-auto">
+                        {/* Глобальный поиск над вкладками */}
+                        <GlobalSearch />
                         <MobileBreadcrumbs />
                         {children}
                     </div>

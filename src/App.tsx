@@ -1,3 +1,4 @@
+// src/App.tsx
 import { ThemeProvider } from "next-themes";
 import { MainLayout } from "./components/layout/MainLayout";
 import { StepIndicator } from "./components/investigation/StepIndicator";
@@ -9,7 +10,6 @@ import HypothesisTree from "./components/investigation/HypothesisTree";
 import { ArtifactsTable } from "./components/investigation/ArtifactsTable";
 import { ReportView } from "./components/investigation/ReportView";
 import { FindingsLog } from "./components/findings/FindingsLog";
-import { SearchTab } from "./components/search/SearchTab";
 import { TipsTab } from "./components/tips/TipsTab";
 import { ChatAssistant } from "./components/chat/ChatAssistant";
 import { GraphTab } from "./components/graph/GraphTab";
@@ -76,11 +76,10 @@ function App() {
             <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab}>
               <TabsContent value={tabs[0]}>{renderInvestigationContent()}</TabsContent>
               <TabsContent value={tabs[1]}><FindingsLog /></TabsContent>
-              <TabsContent value={tabs[2]}><SearchTab /></TabsContent>
-              <TabsContent value={tabs[3]}><TipsTab /></TabsContent>
-              <TabsContent value={tabs[4]}><ChatAssistant /></TabsContent>
-              <TabsContent value={tabs[5]}><GraphTab /></TabsContent>
-              <TabsContent value={tabs[6]}><DataTab /></TabsContent>
+              <TabsContent value={tabs[2]}><TipsTab /></TabsContent>
+              <TabsContent value={tabs[3]}><ChatAssistant /></TabsContent>
+              <TabsContent value={tabs[4]}><GraphTab /></TabsContent>
+              <TabsContent value={tabs[5]}><DataTab /></TabsContent>
             </TabsNavigation>
           </div>
         </div>

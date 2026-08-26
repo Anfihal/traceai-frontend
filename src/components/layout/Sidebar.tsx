@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState, useRef, useEffect } from 'react';
-import { Book, BookOpen, GripVertical, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Book, BookOpen, GripVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -14,20 +14,10 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ onClose }: SidebarProps) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const { language, setLanguage, role, setRole, sidebarPosition, setSidebarPosition, sidebarWidth, sidebarHeight, setSidebarSize, isSidebarOpen, toggleSidebar } = useAppStore();
     const { alert, setAlert, setStep, setContext, setHypotheses, setArtifacts, setReport, setSelectedHypothesisId } =
         useInvestigationStore();
-    const {
-        role,
-        setRole,
-        sidebarPosition,
-        setSidebarPosition,
-        sidebarWidth,
-        sidebarHeight,
-        setSidebarSize,
-        isSidebarOpen,
-        toggleSidebar,
-    } = useAppStore();
     const { ragMode, setRagMode, providers, selectedProviderId, setSelectedProviderId } = useLLMStore();
 
     const [editAlert, setEditAlert] = useState({
@@ -205,6 +195,12 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
 
     const isMobile = window.innerWidth < 640;
 
+    // Обработчик смены языка
+    const handleLanguageChange = (lang: string) => {
+        setLanguage(lang as any);
+        i18n.changeLanguage(lang);
+    };
+
     return (
         <div
             ref={panelRef}
@@ -215,7 +211,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
                 maxHeight: isMobile ? '100%' : '80vh',
             }}
         >
-            {/* Ресайз-хендлы */}
+            {/* Ресайз-хендлы (исправленная версия) */}
             {!isMobile && (
                 <>
                     {(sidebarPosition === 'left' || sidebarPosition === 'right') && (
@@ -252,13 +248,22 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
                     </Button>
                 </div>
                 <div className="flex items-center gap-2">
+                    <Select value={language} onValueChange={handleLanguageChange}>
+                        <SelectTrigger className="w-auto h-8 text-xs border-0 bg-transparent">
+                            <SelectValue placeholder="Язык" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ru">🇷🇺 Русский</SelectItem>
+                            <SelectItem value="en">🇬🇧 English</SelectItem>
+                            <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
+                            <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                            <SelectItem value="es">🇪🇸 Español</SelectItem>
+                            <SelectItem value="zh">🇨🇳 中文</SelectItem>
+                        </SelectContent>
+                    </Select>
                     <div className="rag-book-wrapper flex items-center gap-1" onClick={toggleRag} title={ragMode ? 'Выключить RAG' : 'Включить RAG'}>
                         <div className={`rag-book-icon ${ragMode ? 'open' : 'closed'}`}>
-                            {ragMode ? (
-                                <BookOpen className="h-5 w-5 text-primary" />
-                            ) : (
-                                <Book className="h-5 w-5 text-muted-foreground" />
-                            )}
+                            {ragMode ? <BookOpen className="h-5 w-5 text-primary" /> : <Book className="h-5 w-5 text-muted-foreground" />}
                         </div>
                         <span className="text-xs font-medium text-muted-foreground">RAG</span>
                     </div>
