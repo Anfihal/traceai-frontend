@@ -75,6 +75,7 @@ export interface Artifacts {
 }
 
 export interface Finding {
+    id: string;
     time: string;
     type: string;
     value: string;

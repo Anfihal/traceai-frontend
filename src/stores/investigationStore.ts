@@ -19,7 +19,7 @@ interface InvestigationState {
     findings: Finding[];
     actionLog: { time: string; action: string; role: string }[];
     chatMessages: ChatMessage[];
-    searchQuery: string;                    // <-- добавлено
+    searchQuery: string;
     isLoading: boolean;
     error: string | null;
 
@@ -31,12 +31,14 @@ interface InvestigationState {
     setSelectedHypothesisId: (id: string | null) => void;
     setArtifacts: (artifacts: Artifacts | null) => void;
     setReport: (report: string | null) => void;
+    setFindings: (findings: Finding[]) => void;          // <-- добавлено
     addFinding: (finding: Finding) => void;
+    removeFinding: (id: string) => void;                 // <-- добавлено
     addAction: (action: string) => void;
     reset: () => void;
     addChatMessage: (message: ChatMessage) => void;
     clearChatHistory: () => void;
-    setSearchQuery: (query: string) => void;   // <-- добавлено
+    setSearchQuery: (query: string) => void;
 }
 
 export const useInvestigationStore = create<InvestigationState>((set) => ({
@@ -51,7 +53,7 @@ export const useInvestigationStore = create<InvestigationState>((set) => ({
     findings: [],
     actionLog: [],
     chatMessages: [],
-    searchQuery: '',                     // <-- добавлено
+    searchQuery: '',
     isLoading: false,
     error: null,
 
@@ -63,7 +65,11 @@ export const useInvestigationStore = create<InvestigationState>((set) => ({
     setSelectedHypothesisId: (id) => set({ selectedHypothesisId: id }),
     setArtifacts: (artifacts) => set({ artifacts }),
     setReport: (report) => set({ report }),
+    setFindings: (findings) => set({ findings }),
     addFinding: (finding) => set((state) => ({ findings: [...state.findings, finding] })),
+    removeFinding: (id) => set((state) => ({
+        findings: state.findings.filter(f => f.id !== id)
+    })),
     addAction: (action) => set((state) => ({
         actionLog: [...state.actionLog, { time: new Date().toISOString(), action, role: state.alert?.user || 'unknown' }]
     })),
@@ -71,7 +77,7 @@ export const useInvestigationStore = create<InvestigationState>((set) => ({
         chatMessages: [...state.chatMessages, { ...message, timestamp: new Date().toISOString() }]
     })),
     clearChatHistory: () => set({ chatMessages: [] }),
-    setSearchQuery: (query) => set({ searchQuery: query }),   // <-- добавлено
+    setSearchQuery: (query) => set({ searchQuery: query }),
     reset: () => set({
         step: 0,
         alert: null,
@@ -83,7 +89,7 @@ export const useInvestigationStore = create<InvestigationState>((set) => ({
         findings: [],
         actionLog: [],
         chatMessages: [],
-        searchQuery: '',                 // <-- сбрасываем поиск
+        searchQuery: '',
         isLoading: false,
         error: null,
     }),
