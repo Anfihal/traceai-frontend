@@ -18,7 +18,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
     const { language, setLanguage, role, setRole, sidebarPosition, setSidebarPosition, sidebarWidth, sidebarHeight, setSidebarSize, isSidebarOpen, toggleSidebar } = useAppStore();
     const { alert, setAlert, setStep, setContext, setHypotheses, setArtifacts, setReport, setSelectedHypothesisId } =
         useInvestigationStore();
-    const { ragMode, setRagMode, providers, selectedProviderId, setSelectedProviderId } = useLLMStore();
+    const { ragMode, setRagMode, providers, selectedProviderId, setSelectedProviderId, addProvider } = useLLMStore(); // <-- добавили addProvider
 
     const [editAlert, setEditAlert] = useState({
         src_ip: alert?.src_ip || '10.0.0.45',
@@ -28,6 +28,35 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
         cmd: alert?.cmd || 'powershell -enc ...',
     });
     const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+
+    // ---- Состояния для добавления провайдера ----
+    const [newProviderName, setNewProviderName] = useState('');
+    const [newProviderType, setNewProviderType] = useState<'ollama' | 'openai' | 'anthropic' | 'custom'>('ollama');
+    const [newProviderModel, setNewProviderModel] = useState('');
+    const [newProviderBaseUrl, setNewProviderBaseUrl] = useState('');
+    const [newProviderApiKey, setNewProviderApiKey] = useState('');
+
+    // ---- Обработчик добавления провайдера ----
+    const handleAddProvider = () => {
+        if (!newProviderName || !newProviderModel) return;
+
+        const newProvider = {
+            id: `custom-${Date.now()}`,
+            name: newProviderName,
+            type: newProviderType,
+            model: newProviderModel,
+            baseUrl: newProviderBaseUrl || undefined,
+            apiKey: newProviderApiKey || undefined,
+        };
+
+        addProvider(newProvider);
+        // Очистка полей
+        setNewProviderName('');
+        setNewProviderModel('');
+        setNewProviderBaseUrl('');
+        setNewProviderApiKey('');
+        setNewProviderType('ollama');
+    };
 
     // Перетаскивание
     const panelRef = useRef<HTMLDivElement>(null);
@@ -375,6 +404,75 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
                             ))}
                         </SelectContent>
                     </Select>
+
+                    {/* ---- БЛОК ДОБАВЛЕНИЯ СВОЕГО ПРОВАЙДЕРА ---- */}
+                    <details className="mt-4 border-t border-zinc-200 dark:border-zinc-800 pt-4">
+                        <summary className="text-sm font-medium cursor-pointer hover:text-zinc-900 dark:hover:text-zinc-100">
+                            + Добавить свой провайдер
+                        </summary>
+                        <div className="mt-3 space-y-3">
+                            <div>
+                                <label className="text-xs font-medium">Название</label>
+                                <input
+                                    type="text"
+                                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-transparent"
+                                    placeholder="Мой провайдер"
+                                    value={newProviderName}
+                                    onChange={(e) => setNewProviderName(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium">Тип</label>
+                                <select
+                                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-transparent"
+                                    value={newProviderType}
+                                    onChange={(e) => setNewProviderType(e.target.value as any)}
+                                >
+                                    <option value="ollama">Ollama</option>
+                                    <option value="openai">OpenAI</option>
+                                    <option value="anthropic">Anthropic</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium">Модель</label>
+                                <input
+                                    type="text"
+                                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-transparent"
+                                    placeholder="llama3, gpt-4, claude-3-5-sonnet-20241022"
+                                    value={newProviderModel}
+                                    onChange={(e) => setNewProviderModel(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium">Base URL (опционально)</label>
+                                <input
+                                    type="text"
+                                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-transparent"
+                                    placeholder="http://localhost:11434"
+                                    value={newProviderBaseUrl}
+                                    onChange={(e) => setNewProviderBaseUrl(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs font-medium">API Key (опционально)</label>
+                                <input
+                                    type="password"
+                                    className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md text-sm bg-transparent"
+                                    placeholder="sk-..."
+                                    value={newProviderApiKey}
+                                    onChange={(e) => setNewProviderApiKey(e.target.value)}
+                                />
+                            </div>
+                            <button
+                                onClick={handleAddProvider}
+                                className="w-full py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-md text-sm font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!newProviderName || !newProviderModel}
+                            >
+                                Добавить провайдер
+                            </button>
+                        </div>
+                    </details>
                 </section>
 
                 <section className="border-t pt-4">
