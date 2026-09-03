@@ -3,6 +3,7 @@ import { useInvestigationStore } from '@/stores/investigationStore';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
+import { ContextualTips } from '@/components/ui/ContextualTips';
 
 export const ContextView = () => {
     const { context, step } = useInvestigationStore();
@@ -76,6 +77,8 @@ export const ContextView = () => {
             </div>
             <p className="text-sm"><strong>Команда:</strong> <code className="text-xs">{context.cmd.slice(0, 80)}...</code></p>
             <p className="text-sm"><strong>Соседние алерты:</strong> {context.neighbor_alerts.length} записей</p>
+
+            <ContextualTips />
 
             <div className="flex flex-wrap gap-3 sm:gap-4 mt-4">
                 <Button variant="outline" onClick={handleBack} className="text-sm">
