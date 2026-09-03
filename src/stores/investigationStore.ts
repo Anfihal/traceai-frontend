@@ -1,3 +1,4 @@
+// src/stores/investigationStore.ts
 import { create } from 'zustand';
 import { Alert, Context, Hypothesis, Artifacts, Finding } from '@/types';
 
@@ -31,9 +32,9 @@ interface InvestigationState {
     setSelectedHypothesisId: (id: string | null) => void;
     setArtifacts: (artifacts: Artifacts | null) => void;
     setReport: (report: string | null) => void;
-    setFindings: (findings: Finding[]) => void;          // <-- добавлено
+    setFindings: (findings: Finding[]) => void;
     addFinding: (finding: Finding) => void;
-    removeFinding: (id: string) => void;                 // <-- добавлено
+    removeFinding: (id: string) => void;
     addAction: (action: string) => void;
     reset: () => void;
     addChatMessage: (message: ChatMessage) => void;
@@ -68,13 +69,16 @@ export const useInvestigationStore = create<InvestigationState>((set) => ({
     setFindings: (findings) => set({ findings }),
     addFinding: (finding) => set((state) => ({ findings: [...state.findings, finding] })),
     removeFinding: (id) => set((state) => ({
-        findings: state.findings.filter(f => f.id !== id)
+        findings: state.findings.filter((f) => f.id !== id),
     })),
     addAction: (action) => set((state) => ({
-        actionLog: [...state.actionLog, { time: new Date().toISOString(), action, role: state.alert?.user || 'unknown' }]
+        actionLog: [
+            ...state.actionLog,
+            { time: new Date().toISOString(), action, role: state.alert?.user || 'unknown' },
+        ],
     })),
     addChatMessage: (message) => set((state) => ({
-        chatMessages: [...state.chatMessages, { ...message, timestamp: new Date().toISOString() }]
+        chatMessages: [...state.chatMessages, { ...message, timestamp: new Date().toISOString() }],
     })),
     clearChatHistory: () => set({ chatMessages: [] }),
     setSearchQuery: (query) => set({ searchQuery: query }),
