@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type ChatMode = 'floating' | 'docked';
-export type DockedTabId = string | null; // теперь строка
+export type DockedTabId = string | null;
 
 interface ChatState {
     isOpen: boolean;
     mode: ChatMode;
     dockedTab: DockedTabId;
     position: { x: number; y: number };
+    wasDragged: boolean; // <-- добавили
 }
 
 interface ChatContextValue extends ChatState {
@@ -18,6 +19,7 @@ interface ChatContextValue extends ChatState {
     dockToTab: (tabId: DockedTabId) => void;
     undock: () => void;
     setPosition: (x: number, y: number) => void;
+    setWasDragged: (value: boolean) => void; // <-- добавили
 }
 
 const initialState: ChatState = {
@@ -25,6 +27,7 @@ const initialState: ChatState = {
     mode: 'floating',
     dockedTab: null,
     position: { x: window.innerWidth - 440, y: window.innerHeight - 560 },
+    wasDragged: false, // <-- по умолчанию false
 };
 
 const STORAGE_KEY = 'chat_state';
@@ -37,6 +40,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
+                // Объединяем с initialState, чтобы новые поля (wasDragged) были добавлены
                 return { ...initialState, ...parsed };
             } catch {
                 return initialState;
@@ -60,6 +64,8 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setState((s) => ({ ...s, mode: 'floating', dockedTab: null })),
         setPosition: (x: number, y: number) =>
             setState((s) => ({ ...s, position: { x, y } })),
+        setWasDragged: (value: boolean) => // <-- новый экшен
+            setState((s) => ({ ...s, wasDragged: value })),
     };
 
     const value: ChatContextValue = { ...state, ...actions };

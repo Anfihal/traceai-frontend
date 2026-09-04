@@ -3,13 +3,68 @@ import ReactDOM from 'react-dom';
 import { useDrag } from 'react-dnd';
 import { useChat } from '../../contexts/ChatContext';
 import { ChatAssistant } from './ChatAssistant';
-import { Pin, X } from 'lucide-react';
+import { Pin, X, Anchor } from 'lucide-react'; // <-- добавили Anchor
 
 export const ChatPortal: React.FC = () => {
-    const { isOpen, mode, position, setPosition, undock, closeChat } = useChat();
+    const {
+        isOpen,
+        mode,
+        position,
+        setPosition,
+        undock,
+        closeChat,
+        wasDragged,
+        setWasDragged,
+    } = useChat();
+
     const [isDragging, setIsDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const chatRef = useRef<HTMLDivElement>(null);
+
+    // Функция вычисления позиции относительно кнопки
+    const calculateInitialPosition = () => {
+        const button = document.querySelector('.floating-chat-button') as HTMLElement;
+        if (!button) return null;
+
+        const rect = button.getBoundingClientRect();
+        const chatWidth = 480;
+        const chatHeight = 600;
+        const gap = 12;
+
+        let x = rect.right + gap;
+        let y = rect.bottom + gap;
+
+        if (x + chatWidth > window.innerWidth) {
+            x = rect.left - chatWidth - gap;
+        }
+        if (y + chatHeight > window.innerHeight) {
+            y = rect.top - chatHeight - gap;
+        }
+
+        x = Math.max(gap, Math.min(x, window.innerWidth - chatWidth - gap));
+        y = Math.max(gap, Math.min(y, window.innerHeight - chatHeight - gap));
+
+        return { x, y };
+    };
+
+    // Сброс позиции к иконке
+    const resetPosition = () => {
+        setWasDragged(false);
+        const newPos = calculateInitialPosition();
+        if (newPos) {
+            setPosition(newPos.x, newPos.y);
+        }
+    };
+
+    // При открытии: если не было перетаскивания — позиционируем относительно кнопки
+    useEffect(() => {
+        if (isOpen && mode === 'floating' && !wasDragged) {
+            const newPos = calculateInitialPosition();
+            if (newPos) {
+                setPosition(newPos.x, newPos.y);
+            }
+        }
+    }, [isOpen, mode, wasDragged, setPosition]);
 
     const clampPosition = (x: number, y: number) => {
         const width = chatRef.current?.offsetWidth || 480;
@@ -39,8 +94,10 @@ export const ChatPortal: React.FC = () => {
         collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     });
 
+    // Ручное перетаскивание мышью
     useEffect(() => {
         if (!isDragging) return;
+
         const onMouseMove = (e: MouseEvent) => {
             if (!chatRef.current) return;
             const rect = chatRef.current.getBoundingClientRect();
@@ -49,15 +106,18 @@ export const ChatPortal: React.FC = () => {
             newX = Math.max(0, Math.min(window.innerWidth - rect.width, newX));
             newY = Math.max(0, Math.min(window.innerHeight - rect.height, newY));
             setPosition(newX, newY);
+            setWasDragged(true);
         };
+
         const onMouseUp = () => setIsDragging(false);
+
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
         return () => {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
-    }, [isDragging, dragOffset, setPosition]);
+    }, [isDragging, dragOffset, setPosition, setWasDragged]);
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!chatRef.current) return;
@@ -89,6 +149,14 @@ export const ChatPortal: React.FC = () => {
             >
                 <span className="font-medium text-gray-700 dark:text-gray-200">AI Assistant</span>
                 <div className="flex gap-1">
+                    {/* Новая кнопка сброса позиции */}
+                    <button
+                        onClick={resetPosition}
+                        className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors p-1"
+                        title="Привязать к иконке"
+                    >
+                        <Anchor size={16} />
+                    </button>
                     <button
                         onClick={undock}
                         className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors p-1"
