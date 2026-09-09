@@ -1,5 +1,10 @@
 // src/App.tsx
 import { ThemeProvider } from "next-themes";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
+// Компоненты основного приложения
 import { MainLayout } from "./components/layout/MainLayout";
 import { StepIndicator } from "./components/investigation/StepIndicator";
 import { TabsNavigation } from "./components/layout/TabsNavigation";
@@ -13,19 +18,26 @@ import { TipsTab } from "./components/tips/TipsTab";
 import { ChatAssistant } from "./components/chat/ChatAssistant";
 import { GraphTab } from "./components/graph/GraphTab";
 import { DataTab } from "./components/data/DataTab";
-import { useInvestigationStore } from "./stores/investigationStore";
-import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
-import { useSession } from "./hooks/useSession";
-
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { ChatProvider } from "./contexts/ChatContext";
 import { FloatingChatButton } from "./components/chat/FloatingChatButton";
 import { ChatPortal } from "./components/chat/ChatPortal";
 import { DockableTabContent } from "./components/chat/DockableTabContent";
 
-function App() {
+// Провайдеры
+import { ChatProvider } from "./contexts/ChatContext";
+
+// Хуки и стор
+import { useInvestigationStore } from "./stores/investigationStore";
+import { useSession } from "./hooks/useSession";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+
+// Лендинг (дефолтный импорт)
+import LandingPage from "./pages/Landing";
+
+// ============================================================
+// Компонент основного приложения (SOC-рабочее место)
+// ============================================================
+const AppContent = () => {
   const { step, alert, setAlert, sessionId } = useInvestigationStore();
   const { t } = useTranslation();
   const tabs = t("tabs", { returnObjects: true }) as string[];
@@ -74,40 +86,63 @@ function App() {
   }
 
   return (
+    <>
+      <MainLayout>
+        <div className="max-w-6xl mx-auto">
+          <StepIndicator />
+          <div className="mt-6">
+            <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab}>
+              <DockableTabContent value={tabs[0]}>
+                {renderInvestigationContent()}
+              </DockableTabContent>
+              <DockableTabContent value={tabs[1]}>
+                <FindingsLog />
+              </DockableTabContent>
+              <DockableTabContent value={tabs[2]}>
+                <TipsTab />
+              </DockableTabContent>
+              <DockableTabContent value={tabs[3]}>
+                <ChatAssistant />
+              </DockableTabContent>
+              <DockableTabContent value={tabs[4]}>
+                <GraphTab />
+              </DockableTabContent>
+              <DockableTabContent value={tabs[5]}>
+                <DataTab />
+              </DockableTabContent>
+            </TabsNavigation>
+          </div>
+        </div>
+      </MainLayout>
+      <FloatingChatButton />
+      <ChatPortal />
+    </>
+  );
+};
+
+// ============================================================
+// Корневой компонент с маршрутизацией
+// ============================================================
+function App() {
+  return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <DndProvider backend={HTML5Backend}>
-        <ChatProvider>
-          <MainLayout>
-            <div className="max-w-6xl mx-auto">
-              <StepIndicator />
-              <div className="mt-6">
-                <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab}>
-                  <DockableTabContent value={tabs[0]}>
-                    {renderInvestigationContent()}
-                  </DockableTabContent>
-                  <DockableTabContent value={tabs[1]}>
-                    <FindingsLog />
-                  </DockableTabContent>
-                  <DockableTabContent value={tabs[2]}>
-                    <TipsTab />
-                  </DockableTabContent>
-                  <DockableTabContent value={tabs[3]}>
-                    <ChatAssistant />
-                  </DockableTabContent>
-                  <DockableTabContent value={tabs[4]}>
-                    <GraphTab />
-                  </DockableTabContent>
-                  <DockableTabContent value={tabs[5]}>
-                    <DataTab />
-                  </DockableTabContent>
-                </TabsNavigation>
-              </div>
-            </div>
-          </MainLayout>
-          <FloatingChatButton />
-          <ChatPortal />
-        </ChatProvider>
-      </DndProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/app/*"
+            element={
+              <DndProvider backend={HTML5Backend}>
+                <ChatProvider>
+                  <AppContent />
+                </ChatProvider>
+              </DndProvider>
+            }
+          />
+          <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
