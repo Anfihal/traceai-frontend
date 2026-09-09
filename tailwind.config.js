@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // ===== Цвета основного приложения (HSL) =====
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -41,43 +42,39 @@ module.exports = {
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         danger: "hsl(var(--danger))",
+
+        // ===== Цвета для лендинга (используют CSS-переменные из index.css) =====
+        landing: {
+          bg: 'var(--landing-bg)',
+          surface: 'var(--landing-surface)',
+          surface2: 'var(--landing-surface2)',
+          text: 'var(--landing-text)',
+          muted: 'var(--landing-muted)',
+          border: 'var(--landing-border)',
+          cyan: 'var(--landing-cyan)',
+          'cyan-dark': 'var(--landing-cyan-dark)',
+        },
+        // Прямые HEX-цвета для быстрого использования в утилитах
+        cyan: {
+          DEFAULT: '#20f0e7',
+          dark: '#0bd6cf',
+        },
       },
+
+      // ===== Шрифты =====
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
+
+      // ===== Скругления =====
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-    },
-  },
-  plugins: [require("tailwindcss-animate")],
-}
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: 'class', // важно для next-themes
-  theme: {
-    extend: {
-      colors: {
-        'landing': {
-          bg: 'var(--landing-bg)',
-          surface: 'var(--landing-surface)',
-          text: 'var(--landing-text)',
-          muted: 'var(--landing-muted)',
-          border: 'var(--landing-border)',
-          cyan: '#20f0e7',
-          'cyan-dark': '#0bd6cf',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
+
+      // ===== Анимации для лендинга =====
       animation: {
         'float': 'float 5s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -88,7 +85,8 @@ export default {
           '50%': { transform: 'translateY(-8px)' },
         },
       },
+
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
