@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useDrag } from 'react-dnd';
 import { useChat } from '../../contexts/ChatContext';
 import { ChatAssistant } from './ChatAssistant';
-import { Pin, X, Anchor } from 'lucide-react'; // <-- добавили Anchor
+import { Pin, X, Anchor } from 'lucide-react';
 
 export const ChatPortal: React.FC = () => {
     const {
@@ -21,7 +21,6 @@ export const ChatPortal: React.FC = () => {
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const chatRef = useRef<HTMLDivElement>(null);
 
-    // Функция вычисления позиции относительно кнопки
     const calculateInitialPosition = () => {
         const button = document.querySelector('.floating-chat-button') as HTMLElement;
         if (!button) return null;
@@ -47,7 +46,6 @@ export const ChatPortal: React.FC = () => {
         return { x, y };
     };
 
-    // Сброс позиции к иконке
     const resetPosition = () => {
         setWasDragged(false);
         const newPos = calculateInitialPosition();
@@ -56,7 +54,6 @@ export const ChatPortal: React.FC = () => {
         }
     };
 
-    // При открытии: если не было перетаскивания — позиционируем относительно кнопки
     useEffect(() => {
         if (isOpen && mode === 'floating' && !wasDragged) {
             const newPos = calculateInitialPosition();
@@ -94,7 +91,6 @@ export const ChatPortal: React.FC = () => {
         collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     });
 
-    // Ручное перетаскивание мышью
     useEffect(() => {
         if (!isDragging) return;
 
@@ -134,7 +130,7 @@ export const ChatPortal: React.FC = () => {
                 chatRef.current = node;
                 if (node) drag(node);
             }}
-            className="fixed bg-white dark:bg-gray-900 rounded-xl shadow-2xl flex flex-col z-[9998] overflow-hidden border border-gray-200 dark:border-gray-700
+            className="fixed bg-white dark:bg-[#0d0e13] rounded-xl shadow-2xl shadow-black/20 flex flex-col z-[9998] overflow-hidden border border-[#dfe2e5] dark:border-[#292b34]
                  w-[95vw] max-w-[480px] h-[75vh] max-h-[600px] md:w-[480px] md:h-[600px] transition-all duration-200"
             style={{
                 left: position.x,
@@ -144,29 +140,28 @@ export const ChatPortal: React.FC = () => {
             }}
         >
             <div
-                className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 cursor-grab flex justify-between items-center select-none"
+                className="px-4 py-3 bg-[#f7f7f5] dark:bg-[#15161d] border-b border-[#dfe2e5] dark:border-[#292b34] cursor-grab flex justify-between items-center select-none"
                 onMouseDown={handleMouseDown}
             >
-                <span className="font-medium text-gray-700 dark:text-gray-200">AI Assistant</span>
+                <span className="font-medium text-[#171922] dark:text-[#f7f8fa]">AI Assistant</span>
                 <div className="flex gap-1">
-                    {/* Новая кнопка сброса позиции */}
                     <button
                         onClick={resetPosition}
-                        className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors p-1"
+                        className="text-[#676b75] hover:text-[#20f0e7] dark:text-[#a3a6af] dark:hover:text-[#20f0e7] transition-colors p-1"
                         title="Привязать к иконке"
                     >
                         <Anchor size={16} />
                     </button>
                     <button
                         onClick={undock}
-                        className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors p-1"
+                        className="text-[#676b75] hover:text-[#20f0e7] dark:text-[#a3a6af] dark:hover:text-[#20f0e7] transition-colors p-1"
                         title="Открепить"
                     >
                         <Pin size={16} />
                     </button>
                     <button
                         onClick={closeChat}
-                        className="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors p-1"
+                        className="text-[#676b75] hover:text-[#ff4d4d] dark:text-[#a3a6af] dark:hover:text-[#ff4d4d] transition-colors p-1"
                     >
                         <X size={16} />
                     </button>

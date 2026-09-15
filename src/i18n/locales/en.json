@@ -99,12 +99,6 @@
     "chat_assistant": "Chat assistant",
     "you": "You",
     "assistant": "Assistant",
-    "questions": [
-        "Show all C2 addresses",
-        "What is the next attack stage?",
-        "What to do with this incident?",
-        "Show action history"
-    ],
     "graph_view": "Graph view (visualization)",
     "graph_info": "Collect context first to build the graph.",
     "data_tab": "Loaded data and statistics",
@@ -122,5 +116,104 @@
     "found_in_context": "Found in context",
     "found_in_hypothesis": "Found in hypothesis",
     "found_in_artifacts": "Found in artifacts",
-    "found_in_report": "Found in report"
+    "found_in_report": "Found in report",
+    "landing": {
+        "nav": [
+            "About",
+            "How it works",
+            "About us",
+            "Pricing"
+        ],
+        "support": "Support",
+        "login": "Log in",
+        "eyebrow": "NEXT-GENERATION SOC ASSISTANT",
+        "title": "Your personal AI expert",
+        "titleAccent": "in cybersecurity",
+        "lead": "Cut investigation time from hours to seconds. TraceAI collects context, helps validate hypotheses and turns investigation into a structured workflow.",
+        "primary": "Get started",
+        "secondary": "Watch demo",
+        "alert": "ALERT DETECTED: CVE-2024-3094",
+        "ago": "12ms ago",
+        "context": "Suspicious activity detected in the sshd process.",
+        "ai": "AEGIS AI is building a hypothesis tree to identify the source.",
+        "priceTitle": "AI cybersecurity expert",
+        "priceSub": "the choice of those who strive for excellence.",
+        "priceAmount": "24 490₽",
+        "pricePeriod": "/ mo",
+        "statsEvents": "Incident analysis and assessment",
+        "statsSpeed": "Performance boost",
+        "statsAccuracy": "Hypothesis and context accuracy",
+        "featuresTag": "FEATURES",
+        "featuresTitle": "Intelligent cybersecurity functions",
+        "processTag": "PROCESS",
+        "processTitle": "How TraceAI protects your system",
+        "expertsTag": "EXPERTS",
+        "expertsTitle": "What CISO and SOC leads say",
+        "pricingTag": "PRICING",
+        "pricingTitle": "Flexible plans for teams of any size",
+        "ctaTag": "READY TO START?",
+        "ctaTitle": "Ready to strengthen your cyber defense?",
+        "ctaText": "We'll show TraceAI on your scenarios and discuss how to embed AI into your current SOC process.",
+        "ctaButton": "Request a demo",
+        "emailPlaceholder": "Your work email"
+    },
+    "chat": {
+        "title": "Chat assistant",
+        "placeholder": "Ask the assistant...",
+        "empty": {
+            "title": "Start a dialogue with the AI assistant",
+            "subtitle": "Pick a quick question or ask your own"
+        },
+        "actions": {
+            "showContext": "Show context",
+            "hideContext": "Hide context",
+            "insertContext": "Insert context",
+            "export": "Export",
+            "clear": "Clear",
+            "copy": "Copy",
+            "send": "Send"
+        },
+        "toasts": {
+            "contextAdded": "Context added to message",
+            "noContext": "No context available",
+            "copied": "Copied to clipboard",
+            "exported": "Chat exported",
+            "cleared": "Chat history cleared",
+            "confirmClear": "Clear the entire chat history?"
+        },
+        "typing": "Assistant is typing...",
+        "quickQuestions": {
+            "c2": "Show all C2 addresses",
+            "stage": "What is the next attack stage?",
+            "action": "What to do with this incident?",
+            "hypothesis": "Explain this hypothesis in detail",
+            "alternatives": "What alternative versions exist?"
+        },
+        "contextPrefixes": {
+            "alert": "[ALERT]",
+            "context": "[CONTEXT]",
+            "hypotheses": "[HYPOTHESES]",
+            "artifacts": "[ARTIFACTS]",
+            "selected": "Selected",
+            "notSelected": "not selected",
+            "user": "User",
+            "source": "Source",
+            "target": "Target",
+            "unknown": "unknown"
+        }
+    },
+    "context": {
+        "empty": "No context available to display",
+        "alert": "Alert",
+        "context": "Context",
+        "hypotheses": "Hypotheses",
+        "artifacts": "Artifacts",
+        "rule": "Rule",
+        "user": "User",
+        "source": "Source",
+        "target": "Target",
+        "host": "Host",
+        "command": "Command",
+        "selected": "selected"
+    }
 }

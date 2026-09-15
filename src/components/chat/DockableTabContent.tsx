@@ -31,26 +31,26 @@ export const DockableTabContent: React.FC<DockableTabContentProps> = ({ value, c
             <div
                 ref={ref}
                 className={`transition-all duration-200 rounded-lg p-1 ${isOver && canDrop
-                    ? 'ring-2 ring-indigo-500 ring-offset-2 bg-indigo-50/50 dark:bg-indigo-900/30'
+                    ? 'ring-2 ring-[#20f0e7] ring-offset-2 ring-offset-white dark:ring-offset-[#0d0e13] bg-[#20f0e7]/5 dark:bg-[#20f0e7]/10'
                     : ''
                     }`}
             >
                 {children}
             </div>
             {isDockedHere && (
-                <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div className="mt-4 border-t border-[#dfe2e5] dark:border-[#292b34] pt-4">
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                            <Pin size={14} /> Чат-ассистент
+                        <span className="text-sm font-medium text-[#676b75] dark:text-[#a3a6af] flex items-center gap-1">
+                            <Pin size={14} className="text-[#20f0e7]" /> Чат-ассистент
                         </span>
                         <button
                             onClick={undock}
-                            className="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+                            className="text-xs text-[#0bbdb7] hover:text-[#20f0e7] dark:text-[#20f0e7] dark:hover:text-[#0bd6cf] hover:underline transition-colors"
                         >
                             Открепить
                         </button>
                     </div>
-                    <div className="h-[250px] md:h-[300px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <div className="h-[250px] md:h-[300px] border border-[#dfe2e5] dark:border-[#292b34] rounded-lg overflow-hidden">
                         <ChatAssistant className="flex flex-col h-full" />
                     </div>
                 </div>

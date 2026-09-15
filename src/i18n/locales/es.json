@@ -99,12 +99,6 @@
     "chat_assistant": "Asistente de chat",
     "you": "Usted",
     "assistant": "Asistente",
-    "questions": [
-        "Mostrar todas las direcciones C2",
-        "¿Cuál es la siguiente etapa del ataque?",
-        "¿Qué hacer con este incidente?",
-        "Mostrar historial de acciones"
-    ],
     "graph_view": "Vista de grafo (visualización)",
     "graph_info": "Recopile contexto primero para construir el grafo.",
     "data_tab": "Datos cargados y estadísticas",
@@ -122,5 +116,104 @@
     "found_in_context": "Encontrado en contexto",
     "found_in_hypothesis": "Encontrado en hipótesis",
     "found_in_artifacts": "Encontrado en artefactos",
-    "found_in_report": "Encontrado en informe"
+    "found_in_report": "Encontrado en informe",
+    "landing": {
+        "nav": [
+            "Sobre el servicio",
+            "Instrucciones",
+            "Sobre nosotros",
+            "Tarifas"
+        ],
+        "support": "Soporte",
+        "login": "Iniciar sesión",
+        "eyebrow": "ASISTENTE SOC DE NUEVA GENERACIÓN",
+        "title": "Su experto personal en IA",
+        "titleAccent": "en ciberseguridad",
+        "lead": "Reduzca el tiempo de investigación de horas a segundos. TraceAI recopila contexto, ayuda a validar hipótesis y convierte la investigación en un proceso estructurado.",
+        "primary": "Comenzar",
+        "secondary": "Ver demo",
+        "alert": "ALERTA DETECTADA: CVE-2024-3094",
+        "ago": "hace 12ms",
+        "context": "Actividad sospechosa detectada en el proceso sshd.",
+        "ai": "AEGIS AI está construyendo un árbol de hipótesis para identificar el origen.",
+        "priceTitle": "Experto en IA para ciberseguridad",
+        "priceSub": "la elección de quienes buscan la perfección.",
+        "priceAmount": "24 490₽",
+        "pricePeriod": "/ mes",
+        "statsEvents": "Análisis y evaluación del incidente",
+        "statsSpeed": "Aumento de rendimiento",
+        "statsAccuracy": "Precisión de hipótesis y contexto",
+        "featuresTag": "FUNCIONES",
+        "featuresTitle": "Funciones inteligentes de ciberseguridad",
+        "processTag": "PROCESO",
+        "processTitle": "Cómo TraceAI protege su sistema",
+        "expertsTag": "EXPERTOS",
+        "expertsTitle": "Lo que dicen los CISO y líderes de SOC",
+        "pricingTag": "TARIFAS",
+        "pricingTitle": "Planes flexibles para equipos de cualquier tamaño",
+        "ctaTag": "¿LISTO PARA EMPEZAR?",
+        "ctaTitle": "¿Listo para fortalecer su ciberdefensa?",
+        "ctaText": "Le mostraremos TraceAI en sus escenarios y discutiremos cómo integrar la IA en su proceso SOC actual.",
+        "ctaButton": "Solicitar demo",
+        "emailPlaceholder": "Su correo de trabajo"
+    },
+    "chat": {
+        "title": "Asistente de chat",
+        "placeholder": "Pregunte al asistente...",
+        "empty": {
+            "title": "Inicie un diálogo con el asistente de IA",
+            "subtitle": "Elija una pregunta rápida o haga la suya"
+        },
+        "actions": {
+            "showContext": "Mostrar contexto",
+            "hideContext": "Ocultar contexto",
+            "insertContext": "Insertar contexto",
+            "export": "Exportar",
+            "clear": "Limpiar",
+            "copy": "Copiar",
+            "send": "Enviar"
+        },
+        "toasts": {
+            "contextAdded": "Contexto añadido al mensaje",
+            "noContext": "No hay contexto disponible",
+            "copied": "Copiado al portapapeles",
+            "exported": "Chat exportado",
+            "cleared": "Historial de chat limpiado",
+            "confirmClear": "¿Limpiar todo el historial del chat?"
+        },
+        "typing": "El asistente está escribiendo...",
+        "quickQuestions": {
+            "c2": "Mostrar todas las direcciones C2",
+            "stage": "¿Cuál es la siguiente etapa del ataque?",
+            "action": "¿Qué hacer con este incidente?",
+            "hypothesis": "Explicar esta hipótesis en detalle",
+            "alternatives": "¿Qué versiones alternativas existen?"
+        },
+        "contextPrefixes": {
+            "alert": "[ALERTA]",
+            "context": "[CONTEXTO]",
+            "hypotheses": "[HIPÓTESIS]",
+            "artifacts": "[ARTEFACTOS]",
+            "selected": "Seleccionada",
+            "notSelected": "no seleccionada",
+            "user": "Usuario",
+            "source": "Origen",
+            "target": "Destino",
+            "unknown": "desconocido"
+        }
+    },
+    "context": {
+        "empty": "No hay contexto disponible para mostrar",
+        "alert": "Alerta",
+        "context": "Contexto",
+        "hypotheses": "Hipótesis",
+        "artifacts": "Artefactos",
+        "rule": "Regla",
+        "user": "Usuario",
+        "source": "Origen",
+        "target": "Destino",
+        "host": "Host",
+        "command": "Comando",
+        "selected": "seleccionada"
+    }
 }

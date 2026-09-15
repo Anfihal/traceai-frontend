@@ -99,12 +99,6 @@
     "chat_assistant": "聊天助手",
     "you": "您",
     "assistant": "助手",
-    "questions": [
-        "显示所有C2地址",
-        "下一次攻击阶段是什么？",
-        "如何处理此事件？",
-        "显示操作历史"
-    ],
     "graph_view": "图表视图（可视化）",
     "graph_info": "首先收集上下文以构建图表。",
     "data_tab": "已加载数据和统计信息",
@@ -122,5 +116,104 @@
     "found_in_context": "在上下文中找到",
     "found_in_hypothesis": "在假设中找到",
     "found_in_artifacts": "在工件中找到",
-    "found_in_report": "在报告中发现"
+    "found_in_report": "在报告中发现",
+    "landing": {
+        "nav": [
+            "关于服务",
+            "使用说明",
+            "关于我们",
+            "价格"
+        ],
+        "support": "支持",
+        "login": "登录",
+        "eyebrow": "新一代 SOC 助手",
+        "title": "您的私人 AI 专家",
+        "titleAccent": "网络安全领域",
+        "lead": "将调查时间从数小时缩短到数秒。TraceAI 收集上下文，帮助验证假设，并将调查转化为结构化流程。",
+        "primary": "开始使用",
+        "secondary": "观看演示",
+        "alert": "检测到警报：CVE-2024-3094",
+        "ago": "12毫秒前",
+        "context": "在 sshd 进程中检测到可疑活动。",
+        "ai": "AEGIS AI 正在构建假设树以识别来源。",
+        "priceTitle": "网络安全 AI 专家",
+        "priceSub": "追求卓越者的选择。",
+        "priceAmount": "24 490₽",
+        "pricePeriod": "/ 月",
+        "statsEvents": "事件分析与评估",
+        "statsSpeed": "性能提升",
+        "statsAccuracy": "假设与上下文准确性",
+        "featuresTag": "功能",
+        "featuresTitle": "智能网络安全功能",
+        "processTag": "流程",
+        "processTitle": "TraceAI 如何保护您的系统",
+        "expertsTag": "专家",
+        "expertsTitle": "CISO 和 SOC 负责人的评价",
+        "pricingTag": "价格",
+        "pricingTitle": "适合各种规模团队的灵活方案",
+        "ctaTag": "准备好开始了吗？",
+        "ctaTitle": "准备好加强您的网络防御了吗？",
+        "ctaText": "我们将根据您的场景展示 TraceAI，并讨论如何将 AI 融入您当前的 SOC 流程。",
+        "ctaButton": "申请演示",
+        "emailPlaceholder": "您的工作邮箱"
+    },
+    "chat": {
+        "title": "聊天助手",
+        "placeholder": "向助手提问...",
+        "empty": {
+            "title": "开始与 AI 助手对话",
+            "subtitle": "选择快速问题或提出您自己的问题"
+        },
+        "actions": {
+            "showContext": "显示上下文",
+            "hideContext": "隐藏上下文",
+            "insertContext": "插入上下文",
+            "export": "导出",
+            "clear": "清除",
+            "copy": "复制",
+            "send": "发送"
+        },
+        "toasts": {
+            "contextAdded": "上下文已添加到消息",
+            "noContext": "没有可用的上下文",
+            "copied": "已复制到剪贴板",
+            "exported": "聊天已导出",
+            "cleared": "聊天历史已清除",
+            "confirmClear": "清除整个聊天历史？"
+        },
+        "typing": "助手正在输入...",
+        "quickQuestions": {
+            "c2": "显示所有 C2 地址",
+            "stage": "下一次攻击阶段是什么？",
+            "action": "如何处理此事件？",
+            "hypothesis": "详细解释此假设",
+            "alternatives": "有哪些替代版本？"
+        },
+        "contextPrefixes": {
+            "alert": "[警报]",
+            "context": "[上下文]",
+            "hypotheses": "[假设]",
+            "artifacts": "[工件]",
+            "selected": "已选择",
+            "notSelected": "未选择",
+            "user": "用户",
+            "source": "来源",
+            "target": "目标",
+            "unknown": "未知"
+        }
+    },
+    "context": {
+        "empty": "没有可显示的上下文",
+        "alert": "警报",
+        "context": "上下文",
+        "hypotheses": "假设",
+        "artifacts": "工件",
+        "rule": "规则",
+        "user": "用户",
+        "source": "来源",
+        "target": "目标",
+        "host": "主机",
+        "command": "命令",
+        "selected": "已选择"
+    }
 }

@@ -99,12 +99,6 @@
     "chat_assistant": "Chat-Assistent",
     "you": "Sie",
     "assistant": "Assistent",
-    "questions": [
-        "Alle C2-Adressen anzeigen",
-        "Was ist die nächste Angriffsphase?",
-        "Was tun mit diesem Vorfall?",
-        "Aktionshistorie anzeigen"
-    ],
     "graph_view": "Graphansicht (Visualisierung)",
     "graph_info": "Sammeln Sie zuerst den Kontext, um den Graphen zu erstellen.",
     "data_tab": "Geladene Daten und Statistiken",
@@ -122,5 +116,104 @@
     "found_in_context": "Im Kontext gefunden",
     "found_in_hypothesis": "In Hypothese gefunden",
     "found_in_artifacts": "In Artefakten gefunden",
-    "found_in_report": "Im Bericht gefunden"
+    "found_in_report": "Im Bericht gefunden",
+    "landing": {
+        "nav": [
+            "Über den Dienst",
+            "Anleitung",
+            "Über uns",
+            "Tarife"
+        ],
+        "support": "Support",
+        "login": "Anmelden",
+        "eyebrow": "SOC-ASSISTENT DER NÄCHSTEN GENERATION",
+        "title": "Ihr persönlicher KI-Experte",
+        "titleAccent": "für Cybersicherheit",
+        "lead": "Verkürzen Sie die Untersuchungszeit von Stunden auf Sekunden. TraceAI sammelt Kontext, hilft bei der Überprüfung von Hypothesen und macht die Untersuchung zu einem strukturierten Prozess.",
+        "primary": "Jetzt starten",
+        "secondary": "Demo ansehen",
+        "alert": "ALERT ERKANNT: CVE-2024-3094",
+        "ago": "vor 12ms",
+        "context": "Verdächtige Aktivität im sshd-Prozess erkannt.",
+        "ai": "AEGIS AI erstellt einen Hypothesenbaum zur Identifizierung der Quelle.",
+        "priceTitle": "KI-Experte für Cybersicherheit",
+        "priceSub": "die Wahl derer, die nach Perfektion streben.",
+        "priceAmount": "24 490₽",
+        "pricePeriod": "/ Monat",
+        "statsEvents": "Vorfallanalyse und -bewertung",
+        "statsSpeed": "Leistungssteigerung",
+        "statsAccuracy": "Genauigkeit von Hypothesen und Kontext",
+        "featuresTag": "FUNKTIONEN",
+        "featuresTitle": "Intelligente Cybersicherheitsfunktionen",
+        "processTag": "PROZESS",
+        "processTitle": "Wie TraceAI Ihr System schützt",
+        "expertsTag": "EXPERTEN",
+        "expertsTitle": "Was CISO und SOC-Leiter sagen",
+        "pricingTag": "TARIFE",
+        "pricingTitle": "Flexible Pläne für Teams jeder Größe",
+        "ctaTag": "BEREIT ZU STARTEN?",
+        "ctaTitle": "Bereit, Ihre Cyberverteidigung zu stärken?",
+        "ctaText": "Wir zeigen TraceAI anhand Ihrer Szenarien und besprechen, wie KI in Ihren aktuellen SOC-Prozess integriert werden kann.",
+        "ctaButton": "Demo anfordern",
+        "emailPlaceholder": "Ihre Arbeits-E-Mail"
+    },
+    "chat": {
+        "title": "Chat-Assistent",
+        "placeholder": "Fragen Sie den Assistenten...",
+        "empty": {
+            "title": "Starten Sie einen Dialog mit dem KI-Assistenten",
+            "subtitle": "Wählen Sie eine schnelle Frage oder stellen Sie Ihre eigene"
+        },
+        "actions": {
+            "showContext": "Kontext anzeigen",
+            "hideContext": "Kontext ausblenden",
+            "insertContext": "Kontext einfügen",
+            "export": "Exportieren",
+            "clear": "Löschen",
+            "copy": "Kopieren",
+            "send": "Senden"
+        },
+        "toasts": {
+            "contextAdded": "Kontext zur Nachricht hinzugefügt",
+            "noContext": "Kein Kontext verfügbar",
+            "copied": "In die Zwischenablage kopiert",
+            "exported": "Chat exportiert",
+            "cleared": "Chat-Verlauf gelöscht",
+            "confirmClear": "Den gesamten Chat-Verlauf löschen?"
+        },
+        "typing": "Assistent tippt...",
+        "quickQuestions": {
+            "c2": "Alle C2-Adressen anzeigen",
+            "stage": "Was ist die nächste Angriffsphase?",
+            "action": "Was tun mit diesem Vorfall?",
+            "hypothesis": "Diese Hypothese ausführlich erklären",
+            "alternatives": "Welche alternativen Versionen gibt es?"
+        },
+        "contextPrefixes": {
+            "alert": "[ALERT]",
+            "context": "[KONTEXT]",
+            "hypotheses": "[HYPOTHESEN]",
+            "artifacts": "[ARTEFAKTE]",
+            "selected": "Ausgewählt",
+            "notSelected": "nicht ausgewählt",
+            "user": "Benutzer",
+            "source": "Quelle",
+            "target": "Ziel",
+            "unknown": "unbekannt"
+        }
+    },
+    "context": {
+        "empty": "Kein Kontext zur Anzeige verfügbar",
+        "alert": "Alert",
+        "context": "Kontext",
+        "hypotheses": "Hypothesen",
+        "artifacts": "Artefakte",
+        "rule": "Regel",
+        "user": "Benutzer",
+        "source": "Quelle",
+        "target": "Ziel",
+        "host": "Host",
+        "command": "Befehl",
+        "selected": "ausgewählt"
+    }
 }

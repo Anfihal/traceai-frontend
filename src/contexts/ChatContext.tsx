@@ -8,18 +8,20 @@ interface ChatState {
     mode: ChatMode;
     dockedTab: DockedTabId;
     position: { x: number; y: number };
-    wasDragged: boolean; // <-- добавили
+    wasDragged: boolean;
+    pendingPrompt: string | null; // <-- для предзаполнения из гипотез
 }
 
 interface ChatContextValue extends ChatState {
-    openChat: () => void;
+    openChat: (prefill?: string) => void;
     closeChat: () => void;
     toggleChat: () => void;
     setFloating: () => void;
     dockToTab: (tabId: DockedTabId) => void;
     undock: () => void;
     setPosition: (x: number, y: number) => void;
-    setWasDragged: (value: boolean) => void; // <-- добавили
+    setWasDragged: (value: boolean) => void;
+    consumePendingPrompt: () => string | null;
 }
 
 const initialState: ChatState = {
@@ -27,7 +29,8 @@ const initialState: ChatState = {
     mode: 'floating',
     dockedTab: null,
     position: { x: window.innerWidth - 440, y: window.innerHeight - 560 },
-    wasDragged: false, // <-- по умолчанию false
+    wasDragged: false,
+    pendingPrompt: null,
 };
 
 const STORAGE_KEY = 'chat_state';
@@ -40,8 +43,9 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
-                // Объединяем с initialState, чтобы новые поля (wasDragged) были добавлены
-                return { ...initialState, ...parsed };
+                // pendingPrompt не храним в localStorage
+                const { pendingPrompt, ...rest } = parsed;
+                return { ...initialState, ...rest };
             } catch {
                 return initialState;
             }
@@ -50,22 +54,36 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        // сохраняем всё, кроме pendingPrompt
+        const { pendingPrompt, ...toSave } = state;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     }, [state]);
 
     const actions = {
-        openChat: () => setState((s) => ({ ...s, isOpen: true })),
+        openChat: (prefill?: string) =>
+            setState((s) => ({
+                ...s,
+                isOpen: true,
+                mode: 'floating',
+                pendingPrompt: prefill ?? s.pendingPrompt,
+            })),
         closeChat: () => setState((s) => ({ ...s, isOpen: false })),
         toggleChat: () => setState((s) => ({ ...s, isOpen: !s.isOpen })),
-        setFloating: () => setState((s) => ({ ...s, mode: 'floating', dockedTab: null })),
+        setFloating: () =>
+            setState((s) => ({ ...s, mode: 'floating', dockedTab: null })),
         dockToTab: (tabId: DockedTabId) =>
             setState((s) => ({ ...s, mode: 'docked', dockedTab: tabId, isOpen: true })),
         undock: () =>
             setState((s) => ({ ...s, mode: 'floating', dockedTab: null })),
         setPosition: (x: number, y: number) =>
             setState((s) => ({ ...s, position: { x, y } })),
-        setWasDragged: (value: boolean) => // <-- новый экшен
+        setWasDragged: (value: boolean) =>
             setState((s) => ({ ...s, wasDragged: value })),
+        consumePendingPrompt: (): string | null => {
+            const p = state.pendingPrompt;
+            if (p) setState((s) => ({ ...s, pendingPrompt: null }));
+            return p;
+        },
     };
 
     const value: ChatContextValue = { ...state, ...actions };
