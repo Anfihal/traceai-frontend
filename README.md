@@ -293,7 +293,7 @@ Proprietary © 2026 Infinite Leaders Tech. Все права защищены.
 
 ## 🔗 Ссылки
 
-- **Backend:** [github.com/Anfihal/traceai-backend](https://github.com/Anfihal/traceai-backend)
+- **Backend:** [github.com/Anfihal/traceai-backend](https://github.com/Anfihal/TraceAI-SOC-Prototype)
 - **Продакшен:** [traceai.infiniteleaderstech.ru](https://traceai.infiniteleaderstech.ru)
 
 ---
