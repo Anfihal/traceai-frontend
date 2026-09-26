@@ -1,14 +1,21 @@
+Понял — README.md, оформленный так, чтобы на его основе можно было заключить договор через Контур (или использовать как приложение к договору). Добавляю коммерческий раздел с описанием лицензии, условий, реквизитов и контактов.
+
+```markdown
 # TraceAI Frontend
 
 > **AI-native рабочее пространство для SOC-аналитика.**
 > Ускоряет расследование инцидентов: собирает контекст, строит деревья гипотез, обогащает артефакты и генерирует отчёты.
-> Лендинг + SPA с интерактивным графом, деревом гипотез и чат-ассистентом.
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite)](https://vitejs.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)](https://www.docker.com/)
+
+**Разработчик:** Infinite Leaders Tech
+**Продукт:** TraceAI
+**Версия:** 1.0
+**Дата:** 2026
 
 ---
 
@@ -24,7 +31,7 @@ Frontend TraceAI состоит из **двух приложений**:
 - **Лендинг** — hero, фичи, тарифы, CTA, тёмная/светлая тема, RU/EN.
 - **Расследование** — пошаговый процесс: алерт → контекст → гипотезы → артефакты → отчёт.
 - **Граф связей** — интерактивный `react-force-graph-2d` с зумом и легендой.
-- **Дерево гипотез** — модалки «Источники», «В чат», «JSON» для каждой версии.
+- **Дерево гипотез** — модалки «Источники», «В чат», «JSON».
 - **Чат-ассистент** — плавающее окно с drag & drop, экспортом, контекстом.
 - **Журнал находок** — автоматическое и ручное добавление.
 - **Данные** — статистика, таймлайн, ОС/баннеры.
@@ -43,146 +50,129 @@ Frontend TraceAI состоит из **двух приложений**:
 ### Установка
 
 ```bash
-# 1. Клонировать
 git clone https://github.com/Anfihal/traceai-frontend.git
 cd traceai-frontend
-
-# 2. Установить зависимости
 npm install
+npm run dev
+```
 
-# 3. Настроить окружение
-### Создание `.env`
+Открыть: <http://localhost:5173>
 
-Создайте файл `.env` в **корне проекта** (`soc-platform/.env`) с одной строкой:
+### Переменные окружения
+
+Создайте `.env` в корне проекта:
 
 ```env
 VITE_API_URL=/api
 ```
 
-> **Важно:** путь **относительный** (`/api`), а не `http://localhost:8000`.
-> Запросы пойдут на тот же домен, nginx проксирует их на `backend:8000`.
+> Относительный путь `/api` — nginx проксирует на `backend:8000`.
 
-# 4. Запустить
-npm run dev
-Открыть: http://localhost:5173
+---
 
-🐳 Запуск в Docker
-Сборка
-bash
+## 🐳 Запуск в Docker
+
+```bash
 docker build -t traceai-frontend:latest .
-Через Docker Compose
-bash
 docker compose -f docker-compose.build.yml build
 docker compose up -d
-📁 Структура проекта
-text
+```
+
+---
+
+## 📁 Структура проекта
+
+```text
 soc-platform/
 ├── public/                        # Статика (favicon.svg, hero-bg.png)
 ├── src/
 │   ├── api/                       # Axios-клиенты
-│   │   └── client.ts              # baseURL из VITE_API_URL
-│   ├── components/
-│   │   ├── chat/                  # AI-ассистент
-│   │   │   ├── ChatAssistant.tsx
-│   │   │   ├── ChatPortal.tsx
-│   │   │   ├── ContextDisplay.tsx
-│   │   │   ├── DockableTabContent.tsx
-│   │   │   └── FloatingChatButton.tsx
-│   │   ├── data/                  # Вкладка «Данные»
-│   │   ├── findings/              # Журнал находок
-│   │   ├── graph/                 # Граф связей (react-force-graph-2d)
-│   │   ├── investigation/         # Компоненты расследования
-│   │   │   ├── AlertCard.tsx
-│   │   │   ├── ArtifactsTable.tsx
-│   │   │   ├── ContextView.tsx
-│   │   │   ├── HypothesisTree.tsx
-│   │   │   ├── HypothesisSourcesModal.tsx
-│   │   │   ├── HypothesisConsoleModal.tsx
-│   │   │   ├── ReportView.tsx
-│   │   │   └── StepIndicator.tsx
-│   │   ├── layout/                # MainLayout, TabsNavigation
-│   │   ├── tips/                  # TipsTab
-│   │   └── ui/                    # Radix-обёртки, кнопки
+│   ├── components/                # Chat, Data, Findings, Graph, Investigation
 │   ├── contexts/                  # React Context (ChatContext)
 │   ├── hooks/                     # useSession, useChat, useContextCollection
-│   ├── i18n/                      # Локализация
-│   │   └── locales/
-│   │       ├── ru/                # Русский
-│   │       ├── en/                # Английский
-│   │       ├── de/                # Немецкий
-│   │       ├── es/                # Испанский
-│   │       ├── fr/                # Французский
-│   │       └── zh/                # Китайский
+│   ├── i18n/                      # Локализация (ru, en, de, es, fr, zh)
 │   ├── lib/                       # Утилиты (clsx, tailwind-merge)
-│   ├── pages/
-│   │   └── Landing/               # Лендинг
-│   │       ├── index.tsx
-│   │       ├── Header.tsx
-│   │       ├── Hero.tsx
-│   │       └── index.css
+│   ├── pages/                     # Landing
 │   ├── stores/                    # Zustand
 │   ├── types/                     # TypeScript-типы
 │   ├── App.tsx                    # Маршруты + провайдеры
 │   ├── main.tsx                   # Точка входа
 │   └── index.css                  # Глобальные стили + Tailwind
-├── .dockerignore
-├── .env                           # VITE_API_URL=/api
 ├── Dockerfile                     # Multi-stage: node → nginx
 ├── nginx.conf                     # SPA-роутинг + прокси на backend
-├── docker-compose.build.yml       # Локальная сборка образов
-├── docker-compose.deploy.yml      # Деплой на сервер
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-├── vite.config.ts
 └── README.md
-📜 Скрипты
-Команда	Описание
-npm run dev	Dev-сервер с HMR
-npm run build	Production-сборка (dist/)
-npm run preview	Просмотр production-сборки
-npm run lint	ESLint (oxlint)
-npm run type-check	Проверка типов TypeScript
-🗺️ Маршрутизация
-Путь	Компонент	Описание
-/	LandingPage	Публичный лендинг
-/app	AppContent	Рабочее пространство
-/app/dashboard	Дашборд	Основной экран
-/login	(в разработке)	Авторизация
-*	→ /	Редирект на лендинг
-🎨 Темы
-Проект поддерживает тёмную и светлую темы через next-themes.
+```
 
-Палитра (соответствует лендингу)
-Токен	Тёмная тема	Светлая тема
---background	#0d0e13	#f7f7f5
---foreground	#f7f8fa	#171922
---card	#15161d	#ffffff
---border	#292b34	#dfe2e5
---primary	#20f0e7	#20f0e7
---primary-foreground	#06100f	#06100f
---destructive	#ff4d4d	#ff4d4d
-Правило: на бирюзовом #20f0e7 — только тёмный текст #06100f (WCAG AAA).
+---
 
-🌍 Локализация
-Файлы локализации: src/i18n/locales/{lang}/common.json.
+## 📜 Скрипты
 
-tsx
+| Команда | Описание |
+|---------|----------|
+| `npm run dev` | Dev-сервер с HMR |
+| `npm run build` | Production-сборка (`dist/`) |
+| `npm run preview` | Просмотр production-сборки |
+| `npm run lint` | ESLint (oxlint) |
+| `npm run type-check` | Проверка типов TypeScript |
+
+---
+
+## 🗺️ Маршрутизация
+
+| Путь | Компонент | Описание |
+|------|-----------|----------|
+| `/` | LandingPage | Публичный лендинг |
+| `/app` | AppContent | Рабочее пространство |
+| `/app/dashboard` | Дашборд | Основной экран |
+| `/login` | (в разработке) | Авторизация |
+| `*` | → `/` | Редирект на лендинг |
+
+---
+
+## 🎨 Темы
+
+Поддержка тёмной и светлой темы через `next-themes`.
+
+| Токен | Тёмная тема | Светлая тема |
+|-------|-------------|--------------|
+| `--background` | `#0d0e13` | `#f7f7f5` |
+| `--foreground` | `#f7f8fa` | `#171922` |
+| `--card` | `#15161d` | `#ffffff` |
+| `--border` | `#292b34` | `#dfe2e5` |
+| `--primary` | `#20f0e7` | `#20f0e7` |
+| `--primary-foreground` | `#06100f` | `#06100f` |
+| `--destructive` | `#ff4d4d` | `#ff4d4d` |
+
+> На бирюзовом `#20f0e7` — только тёмный текст `#06100f` (WCAG AAA).
+
+---
+
+## 🌍 Локализация
+
+Файлы локализации: `src/i18n/locales/{lang}/common.json`.
+
+```tsx
 import { useTranslation } from 'react-i18next';
 
 const { t } = useTranslation();
 return <h1>{t('landing.title')}</h1>;
-Переключение языка
-Кнопка RU/EN в хедере лендинга. Поддерживаются: ru, en, de, es, fr, zh.
+```
 
-⚙️ Переменные окружения
-Переменная	Описание	Значение
-VITE_API_URL	Базовый путь API	/api
-Важно: используем относительный путь /api — nginx проксирует на backend:8000.
+Поддерживаются: `ru`, `en`, `de`, `es`, `fr`, `zh`.
 
-🏗️ Архитектура
-text
+---
+
+## ⚙️ Переменные окружения
+
+| Переменная | Описание | Значение |
+|------------|----------|----------|
+| `VITE_API_URL` | Базовый путь API | `/api` |
+
+---
+
+## 🏗️ Архитектура
+
+```text
 Пользователь
     │
     ▼
@@ -199,56 +189,115 @@ Nginx (container: frontend)
                 ├── ChromaDB (векторная память)
                 ├── Redis (кеш)
                 └── PostgreSQL (сессии)
-🐛 Возможные проблемы
-Проблема	Причина	Решение
-404 на /app/dashboard	Nginx не отдаёт index.html	Добавить try_files $uri $uri/ /index.html;
-CORS error	Домен фронта не в allow_origins	Обновить app/main.py в бэкенде
-POST /session/start → 405	Неверный VITE_API_URL	Установить VITE_API_URL=/api
-Cannot find module '@/...'	Не настроен alias	Проверить tsconfig.json → paths
-Белый экран	Ошибка сборки	npm run build локально — покажет ошибку
-⚡ Оптимизация
-Кэш Vite
-Не удаляйте node_modules/.vite — это ускоряет повторные запуски.
+```
 
-bash
-npm run clean   # только если что-то сломалось
-SWC вместо Babel
-Уже используется @vitejs/plugin-react-swc — в 10 раз быстрее Babel.
+---
 
-Windows Defender
-Добавьте папку проекта в исключения — ускоряет старт на 30–50%.
+## 🐛 Возможные проблемы
 
-📌 Roadmap
-☑ Лендинг с тёмной/светлой темой
-☑ AI-ассистент с плавающим окном
-☑ Граф связей с зумом
-☑ Дерево гипотез с модалками
-☑ i18n (RU, EN, DE, ES, FR, ZH)
-□ Аутентификация (JWT)
-□ Автоматический режим расследования
-□ Экспорт отчётов в PDF
-□ Realtime-обновления (WebSocket)
-📄 Лицензия
-MIT © 2026 TraceAI
+| Проблема | Причина | Решение |
+|----------|---------|---------|
+| 404 на `/app/dashboard` | Nginx не отдаёт `index.html` | Добавить `try_files $uri $uri/ /index.html;` |
+| CORS error | Домен фронта не в `allow_origins` | Обновить `app/main.py` в бэкенде |
+| `POST /session/start` → 405 | Неверный `VITE_API_URL` | Установить `VITE_API_URL=/api` |
+| `Cannot find module '@/...'` | Не настроен alias | Проверить `tsconfig.json` → `paths` |
+| Белый экран | Ошибка сборки | `npm run build` локально — покажет ошибку |
 
-🔗 Ссылки
-Backend: github.com/Anfihal/traceai-backend
+---
 
-Продакшен: traceai.infiniteleaderstech.ru
+## 💼 Коммерческое использование и лицензирование
 
-Figma: по запросу
+Продукт **TraceAI** разработан компанией **Infinite Leaders Tech** и распространяется на условиях коммерческой лицензии.
 
-<p align="center"> Сделано с ❤️ для SOC-аналитиков </p> ```
-Этот README покрывает всё:
+### Варианты лицензий
 
-Быстрый старт и скрипты.
+| Тариф | Условия | Стоимость |
+|-------|---------|-----------|
+| **Community** | Для знакомства с продуктом, без коммерческого использования | Бесплатно |
+| **SOC Team** | Для рабочих команд SOC, без ограничений на события | 95 000 ₽ / мес |
+| **Enterprise** | On-Premise, кастомное дообучение моделей, персональный архитектор, 24/7 | По запросу |
 
-Полный стек технологий.
+### Что входит в лицензию
 
-Структуру папок.
+- Исходный код Frontend + Backend
+- Право на развёртывание в инфраструктуре Лицензиата
+- Техническая документация
+- Обновления в течение срока действия договора
+- Техническая поддержка (по SLA)
 
-Маршрутизацию, темы, i18n.
+### Ограничения
 
-Оптимизацию и troubleshooting.
+- Запрещена перепродажа продукта третьим лицам без письменного согласия
+- Запрещено снятие или изменение знаков авторского права
+- Использование допускается только в объёме, указанном в договоре
 
-Roadmap и ссылки.
+---
+
+## 📄 Порядок заключения договора
+
+1. **Заявка.** Направьте запрос на почту или в Telegram с указанием:
+   - Название организации
+   - ИНН / КПП
+   - Контактное лицо
+   - Интересующий тариф
+   - Сценарии использования
+
+2. **Коммерческое предложение.** Мы подготовим КП с расчётом стоимости под ваши задачи.
+
+3. **Согласование условий.** Обсуждаем объём лицензии, SLA, порядок поддержки.
+
+4. **Подписание договора.** Возможны варианты:
+   - Электронно через **Контур.Диадок** или **СБИС**
+   - Бумажный документооборот
+   - По ЭДО партнёра
+
+5. **Активация.** Передаём лицензионные ключи, доступ к обновлениям, помогаем с развёртыванием.
+
+---
+
+## 📞 Контакты
+
+**Infinite Leaders Tech**
+
+| Канал | Контакт |
+|-------|---------|
+| **Email** | [InfiniteleadersTech@yandex.ru](mailto:InfiniteleadersTech@yandex.ru) |
+| **Telegram** | [@InfiniteleadersTech](https://t.me/InfiniteleadersTech) |
+| **Сайт продукта** | [traceai.infiniteleaderstech.ru](https://traceai.infiniteleaderstech.ru) |
+
+По вопросам заключения договора обращайтесь по почте — ответим в течение рабочего дня.
+
+---
+
+## 📌 Roadmap
+
+- [x] Лендинг с тёмной/светлой темой
+- [x] AI-ассистент с плавающим окном
+- [x] Граф связей с зумом
+- [x] Дерево гипотез с модалками
+- [x] i18n (RU, EN, DE, ES, FR, ZH)
+- [ ] Аутентификация (JWT)
+- [ ] Автоматический режим расследования
+- [ ] Экспорт отчётов в PDF
+- [ ] Realtime-обновления (WebSocket)
+
+---
+
+## 📄 Лицензия
+
+Proprietary © 2026 Infinite Leaders Tech. Все права защищены.
+
+Использование продукта регулируется условиями договора между Лицензиаром и Лицензиатом.
+
+---
+
+## 🔗 Ссылки
+
+- **Backend:** [github.com/Anfihal/traceai-backend](https://github.com/Anfihal/traceai-backend)
+- **Продакшен:** [traceai.infiniteleaderstech.ru](https://traceai.infiniteleaderstech.ru)
+
+---
+
+<p align="center">Сделано с ❤️ для SOC-аналитиков</p>
+```
+
