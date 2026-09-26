@@ -274,6 +274,7 @@ const HypothesisTree = () => {
                             </div>
 
                             {/* === Нижняя панель действий === */}
+                            {/* Мобила (<640px): только иконки. Десктоп: иконка + текст. */}
                             <div className="flex items-center gap-1 px-4 py-2 border-t border-[#dfe2e5] dark:border-[#292b34]">
                                 <Button
                                     variant="ghost"
@@ -282,10 +283,12 @@ const HypothesisTree = () => {
                                         e.stopPropagation();
                                         setSourcesModal(hyp);
                                     }}
-                                    className="h-7 px-2 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] dark:text-[#a3a6af] dark:hover:text-[#20f0e7]"
+                                    title={t('hypotheses.actions.sources')}
+                                    aria-label={t('hypotheses.actions.sources')}
+                                    className="h-8 px-2 sm:px-3 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] hover:bg-transparent dark:text-[#a3a6af] dark:hover:text-[#20f0e7] dark:hover:bg-transparent"
                                 >
-                                    <Database size={13} />
-                                    {t('hypotheses.actions.sources')}
+                                    <Database size={16} className="shrink-0" />
+                                    <span className="hidden sm:inline">{t('hypotheses.actions.sources')}</span>
                                 </Button>
                                 <Button
                                     variant="ghost"
@@ -294,10 +297,12 @@ const HypothesisTree = () => {
                                         e.stopPropagation();
                                         sendToChat(hyp);
                                     }}
-                                    className="h-7 px-2 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] dark:text-[#a3a6af] dark:hover:text-[#20f0e7]"
+                                    title={t('hypotheses.actions.chat')}
+                                    aria-label={t('hypotheses.actions.chat')}
+                                    className="h-8 px-2 sm:px-3 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] hover:bg-transparent dark:text-[#a3a6af] dark:hover:text-[#20f0e7] dark:hover:bg-transparent"
                                 >
-                                    <MessageSquare size={13} />
-                                    {t('hypotheses.actions.chat')}
+                                    <MessageSquare size={16} className="shrink-0" />
+                                    <span className="hidden sm:inline">{t('hypotheses.actions.chat')}</span>
                                 </Button>
                                 <Button
                                     variant="ghost"
@@ -306,10 +311,12 @@ const HypothesisTree = () => {
                                         e.stopPropagation();
                                         setConsoleModal(hyp);
                                     }}
-                                    className="h-7 px-2 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] dark:text-[#a3a6af] dark:hover:text-[#20f0e7]"
+                                    title={t('hypotheses.actions.console')}
+                                    aria-label={t('hypotheses.actions.console')}
+                                    className="h-8 px-2 sm:px-3 gap-1.5 text-xs text-[#676b75] hover:text-[#20f0e7] hover:bg-transparent dark:text-[#a3a6af] dark:hover:text-[#20f0e7] dark:hover:bg-transparent"
                                 >
-                                    <Terminal size={13} />
-                                    {t('hypotheses.actions.console')}
+                                    <Terminal size={16} className="shrink-0" />
+                                    <span className="hidden sm:inline">{t('hypotheses.actions.console')}</span>
                                 </Button>
                             </div>
                         </div>

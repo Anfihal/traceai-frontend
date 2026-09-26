@@ -145,17 +145,136 @@
         "statsAccuracy": "假设与上下文准确性",
         "featuresTag": "功能",
         "featuresTitle": "智能网络安全功能",
+        "features": [
+            {
+                "title": "AI 原生分析",
+                "desc": "AI 帮助构建假设、关联事件并加速调查。",
+                "tone": "cyan"
+            },
+            {
+                "title": "智能攻击分析",
+                "desc": "从多个来源收集上下文，突出关键信息，过滤无用噪声。",
+                "tone": "dark"
+            },
+            {
+                "title": "场景生成",
+                "desc": "帮助快速确定调查的下一步并验证假设。",
+                "tone": "light"
+            },
+            {
+                "title": "融入工作空间",
+                "desc": "所有工件、事件和结论汇集于一处。",
+                "tone": "dark"
+            },
+            {
+                "title": "Zero-Trust 模型训练",
+                "desc": "隔离的数据处理与可控的 AI 环境。",
+                "tone": "dark"
+            },
+            {
+                "title": "24/7 调查助手",
+                "desc": "AI 在调查的每个阶段陪伴分析师。",
+                "tone": "cyan"
+            }
+        ],
         "processTag": "流程",
         "processTitle": "TraceAI 如何保护您的系统",
+        "steps": [
+            {
+                "num": "01",
+                "title": "即时初步评估",
+                "desc": "TraceAI 自动收集事件上下文并突出关键指标。"
+            },
+            {
+                "num": "02",
+                "title": "假设生成与验证",
+                "desc": "AI 帮助构建攻击版本，并基于可用数据快速验证。"
+            },
+            {
+                "num": "03",
+                "title": "AI 交互式报告",
+                "desc": "调查结果转化为清晰的报告，无需手动繁琐工作。"
+            },
+            {
+                "num": "04",
+                "title": "一键定位",
+                "desc": "下一步可直接从分析师工作空间执行。"
+            }
+        ],
+        "videoBadge": "视频",
+        "videoTitle": "系统演示",
+        "videoLead": "观看 TraceAI 如何缩短从事件到分析师清晰结论的路径。",
+        "videoCta": "观看演示",
+        "videoCaption": "TraceAI / SOC workflow",
         "expertsTag": "专家",
         "expertsTitle": "CISO 和 SOC 负责人的评价",
+        "aboutBadge": "关于我们",
+        "aboutTitle": "TraceAI —— Infinite Leaders Tech 出品",
+        "aboutLead": "Infinite Leaders Tech 为 SOC 分析师和网络安全工程师打造工具。TraceAI 是我们基于真实工业生产 SOC 经验构建的 AI 辅助事件调查平台。",
+        "aboutHighlights": [
+            {
+                "title": "SOC 专业能力",
+                "desc": "团队拥有处理真实事件和工业生产 SOC 环境的实战经验。"
+            },
+            {
+                "title": "企业级方案",
+                "desc": "架构已为大型基础设施负载和 SIEM / SOAR 集成做好准备。"
+            },
+            {
+                "title": "AI 工程能力",
+                "desc": "自研调查流程管线以及在受控环境中运行 LLM。"
+            }
+        ],
+        "aboutCaseBadge": "经验",
+        "aboutCaseTitle": "我们为 Positive Technologies 完成了什么",
+        "aboutCaseText": "我们的团队为 Positive Technologies 交付过项目——该公司是网络安全市场的领导者之一。这一经验塑造了 TraceAI：对真实 SOC 流程、事件分析要求以及大规模事件处理的理解。我们将一线分析师真正需要的功能带入产品，而不是关于「正确」SOC 的抽象设想。",
         "pricingTag": "价格",
         "pricingTitle": "适合各种规模团队的灵活方案",
-        "ctaTag": "准备好开始了吗？",
+        "pricingCta": "了解更多",
+        "pricingPlans": [
+            {
+                "name": "Community",
+                "price": "免费",
+                "lead": "用于了解产品思路",
+                "features": [
+                    "AI 调查助手",
+                    "上下文与假设",
+                    "报告与历史记录"
+                ],
+                "highlight": false
+            },
+            {
+                "name": "SOC Team",
+                "price": "990 美元/月",
+                "lead": "面向生产 SOC 团队",
+                "features": [
+                    "事件数量无限制",
+                    "假设树构建",
+                    "API 与 Webhook 集成",
+                    "SIEM / SOAR 集成"
+                ],
+                "highlight": true
+            },
+            {
+                "name": "Enterprise",
+                "price": "按需定制",
+                "lead": "面向大型基础设施",
+                "features": [
+                    "本地化部署（On-Premise）",
+                    "模型定制微调",
+                    "专属架构师",
+                    "7×24 事件协助"
+                ],
+                "highlight": false
+            }
+        ],
+        "ctaTag": "联系我们",
         "ctaTitle": "准备好加强您的网络防御了吗？",
-        "ctaText": "我们将根据您的场景展示 TraceAI，并讨论如何将 AI 融入您当前的 SOC 流程。",
-        "ctaButton": "申请演示",
-        "emailPlaceholder": "您的工作邮箱"
+        "ctaText": "我们将向您展示如何将 TraceAI 融入当前 SOC 流程，并基于您的场景演示平台。",
+        "ctaButton": "联系我们",
+        "emailPlaceholder": "您的工作邮箱",
+        "footerTagline": "AI-native workspace for SOC analysts",
+        "footerCopyright": "© 2026 TraceAI · Infinite Leaders Tech"
     },
     "chat": {
         "title": "聊天助手",

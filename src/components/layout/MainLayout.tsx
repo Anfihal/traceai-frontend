@@ -32,7 +32,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                     </Button>
                     <h1 className="text-lg font-bold truncate">
                         <span className="hidden sm:inline">{t('page_title')}</span>
-                        <span className="sm:inline">{t('page_title_short')}</span>
+                        <span className="sm:hidden">{t('page_title_short')}</span>
                     </h1>
                 </div>
                 <ThemeToggle />

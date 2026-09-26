@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ../ai_soc_workspace
+      dockerfile: Dockerfile
+    image: traceai-backend:latest
+    container_name: traceai-backend-build
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: traceai-frontend:latest
+    container_name: traceai-frontend-build

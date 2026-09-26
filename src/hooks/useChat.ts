@@ -1,30 +1,48 @@
 import { useMutation } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { apiClient } from '@/api/client';
 import { useInvestigationStore } from '@/stores/investigationStore';
 import { useLLMStore } from '@/stores/llmStore';
+import { useAvailableProviders } from '@/hooks/useAvailableProviders';
 
 export const useChat = () => {
     const { sessionId, addChatMessage } = useInvestigationStore();
-    const { ragMode, selectedProviderId, providers } = useLLMStore();
+    const { ragMode, selectedProviderId, customProviders } = useLLMStore();
+    const { providers: ollamaProviders } = useAvailableProviders();
 
-    const selectedProvider = providers.find(p => p.id === selectedProviderId);
+    // Объединяем Ollama (с бэка) + Custom (из стора)
+    const allProviders = useMemo(
+        () => [...(ollamaProviders || []), ...(customProviders || [])],
+        [ollamaProviders, customProviders]
+    );
+
+    const selectedProvider = allProviders.find((p) => p.id === selectedProviderId);
 
     return useMutation({
         mutationFn: async (question: string) => {
             if (!sessionId) throw new Error('Сессия не инициализирована');
 
-            // Добавляем сообщение пользователя сразу
             addChatMessage({ role: 'user', content: question });
+
+            // Собираем конфиг провайдера в формате, который ждёт бэкенд:
+            // { type, model, baseUrl, apiKey } — build_provider_from_config
+            const providerConfig = selectedProvider
+                ? {
+                    type: selectedProvider.type,
+                    model: selectedProvider.model,
+                    baseUrl: (selectedProvider as any).baseUrl,
+                    apiKey: (selectedProvider as any).apiKey,
+                    name: selectedProvider.name,
+                }
+                : {
+                    type: 'ollama',
+                    model: 'llama3',
+                };
 
             const payload = {
                 question,
                 rag_mode: ragMode,
-                llm_config: {
-                    provider: selectedProvider?.type || 'ollama',
-                    model: selectedProvider?.model || 'llama3',
-                    api_key: selectedProvider?.apiKey || '',
-                    base_url: selectedProvider?.baseUrl || 'http://localhost:11434',
-                }
+                llm_config: providerConfig,
             };
 
             const response = await apiClient.post(`/session/${sessionId}/chat`, payload);
@@ -37,7 +55,7 @@ export const useChat = () => {
             console.error('Ошибка чата:', error);
             addChatMessage({
                 role: 'assistant',
-                content: '❌ Произошла ошибка при генерации ответа. Попробуйте позже.'
+                content: '❌ Произошла ошибка при генерации ответа. Попробуйте позже.',
             });
         },
     });

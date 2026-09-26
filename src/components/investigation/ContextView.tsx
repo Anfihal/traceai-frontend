@@ -11,12 +11,12 @@ export const ContextView = () => {
 
     useEffect(() => {
         if (step === 1 && !context && !isPending) {
-            gatherContext({ llmConfig: {}, ragMode: false });
+            gatherContext({ ragMode: false });
         }
     }, [step, context, isPending, gatherContext]);
 
     const handleRetry = () => {
-        gatherContext({ llmConfig: {}, ragMode: false });
+        gatherContext({ ragMode: false });
     };
 
     const handleBack = () => {

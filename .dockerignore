@@ -1,0 +1,47 @@
+# Зависимости Node.js (переустанавливаются внутри контейнера через npm ci)
+node_modules/
+
+# Старая сборка (Docker собирает заново)
+dist/
+build/
+
+# Кеш Vite
+.vite/
+node_modules/.vite/
+node_modules/.cache/
+
+# Логи
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Окружение (в образ не должны попадать секреты)
+.env
+.env.local
+.env.*.local
+
+# Документация
+README.md
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Прочее
+coverage/
+.DS_Store
+Thumbs.db

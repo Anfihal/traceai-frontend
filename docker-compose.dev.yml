@@ -1,0 +1,160 @@
+services:
+  # ============ Redis (для очереди) ============
+  redis:
+    image: redis:7-alpine
+    container_name: traceai-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - traceai-net
+
+  # ============ ChromaDB ============
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: traceai-chroma-dev
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    networks:
+      - traceai-net
+
+  # ============ Ollama (на хосте) ============
+  # Если Ollama у вас установлена на Windows — этот блок не нужен
+  # Если хотите в контейнере — раскомментируйте
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: traceai-ollama-dev
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ./data/ollama:/root/.ollama
+  #   environment:
+  #     - OLLAMA_KEEP_ALIVE=24h
+  #     - OLLAMA_NUM_PARALLEL=4
+  #   networks:
+  #     - traceai-net
+
+  # ============ G4F ============
+  g4f:
+    image: hlohaus789/g4f:latest-slim
+    container_name: traceai-g4f-dev
+    restart: unless-stopped
+    ports:
+      - "1337:1337"
+    environment:
+      - G4F_API_KEY=dev_secret
+    networks:
+      - traceai-net
+
+  # ============ Cloudflare WARP Proxy ============
+  warp-proxy:
+    image: shahradel/cfw-proxy:latest
+    container_name: traceai-warp-dev
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+    environment:
+      - PROXY_USERNAME=traceai
+      - PROXY_PASSWORD=dev_secret
+      - SOCKS5_PORT=1080
+      - HTTP_PORT=8080
+    networks:
+      - traceai-net
+
+  # ============ Backend (с hot-reload) ============
+  backend:
+    build:
+      context: ../ai_soc_workspace
+      dockerfile: Dockerfile
+    container_name: traceai-backend-dev
+    restart: unless-stopped
+    env_file:
+      - ../ai_soc_workspace/.env
+    environment:
+      # Внутри Docker-сети используем имена сервисов
+      - LLM_PROVIDER=ollama
+      - LLM_MODEL=llama3
+      - LLM_BASE_URL=http://host.docker.internal:11434 # Ollama на Windows-хосте
+      - G4F_BASE_URL=http://g4f:1337
+      - G4F_API_KEY=dev_secret
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - QUEUE_NAME=llm_tasks
+      - QUEUE_THRESHOLD=3
+      - SYNC_TIMEOUT_G4F=10
+      - SYNC_TIMEOUT_OLLAMA=90
+    ports:
+      - "8000:8000"
+    volumes:
+      # Монтируем исходники для hot-reload
+      - ../ai_soc_workspace/app:/app/app:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - redis
+      - g4f
+      - chromadb
+    networks:
+      - traceai-net
+
+  # ============ RQ Worker (с hot-reload) ============
+  worker:
+    build:
+      context: ../ai_soc_workspace
+      dockerfile: Dockerfile
+    container_name: traceai-worker-dev
+    restart: unless-stopped
+    env_file:
+      - ../ai_soc_workspace/.env
+    environment:
+      - LLM_PROVIDER=ollama
+      - LLM_MODEL=llama3
+      - LLM_BASE_URL=http://host.docker.internal:11434
+      - G4F_BASE_URL=http://g4f:1337
+      - G4F_API_KEY=dev_secret
+      - REDIS_URL=redis://redis:6379/0
+      - QUEUE_NAME=llm_tasks
+    volumes:
+      - ../ai_soc_workspace/app:/app/app:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: [ "python", "-m", "app.worker" ]
+    depends_on:
+      - redis
+      - g4f
+    networks:
+      - traceai-net
+
+  # ============ Frontend (Vite dev-сервер) ============
+  frontend:
+    image: node:20-alpine
+    container_name: traceai-frontend-dev
+    working_dir: /app
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules # не перезаписываем node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - traceai-net
+
+networks:
+  traceai-net:
+    driver: bridge

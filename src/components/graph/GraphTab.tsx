@@ -2,7 +2,9 @@
 import { useState, useRef, useMemo } from 'react';
 import { useInvestigationStore } from '@/stores/investigationStore';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import ForceGraph2D from 'react-force-graph-2d';
+import { apiClient } from '@/api/client';
 import { Button } from '@/components/ui/button';
 import {
     RefreshCw,
@@ -14,8 +16,8 @@ import {
     Download,
     BarChart3,
     Globe,
-    Server,
     Monitor,
+    Loader2,
 } from 'lucide-react';
 import {
     Card,
@@ -50,12 +52,61 @@ interface GraphData {
     links: GraphLink[];
 }
 
+interface OsBannersData {
+    client_os: Record<string, number>;
+    server_banners: Record<string, number>;
+    generated_at?: string;
+    has_context?: boolean;
+}
+
+const NODE_COLORS: Record<number, string> = {
+    1: '#3b82f6', // источник — синий
+    2: '#ef4444', // цель — красный
+    3: '#f59e0b', // соседние — жёлтый
+};
+
 export const GraphTab = () => {
-    const { context, alert } = useInvestigationStore();
+    const { context, alert, sessionId } = useInvestigationStore();
     const { t } = useTranslation();
     const graphRef = useRef<any>(null);
     const [view, setView] = useState<'graph' | 'timeline' | 'traffic' | 'os' | 'overview'>('graph');
 
+    // ============================================================
+    // Загрузка ОС и баннеров с бэка
+    // ============================================================
+    const {
+        data: osBannersData,
+        isLoading: osBannersLoading,
+        error: osBannersError,
+        refetch: refetchOsBanners,
+    } = useQuery<OsBannersData>({
+        queryKey: ['os-banners', sessionId],
+        queryFn: async () => {
+            if (!sessionId) throw new Error('No session');
+            const res = await apiClient.get(`/session/${sessionId}/os-banners`);
+            return res.data;
+        },
+        enabled: !!sessionId && !!context,
+        staleTime: 30_000,
+        retry: 1,
+    });
+
+    const osBanners: OsBannersData = useMemo(() => {
+        return {
+            client_os: osBannersData?.client_os || {},
+            server_banners: osBannersData?.server_banners || {},
+            generated_at: osBannersData?.generated_at,
+            has_context: osBannersData?.has_context,
+        };
+    }, [osBannersData]);
+
+    const hasOsData =
+        Object.keys(osBanners.client_os).length > 0 ||
+        Object.keys(osBanners.server_banners).length > 0;
+
+    // ============================================================
+    // Построение графа
+    // ============================================================
     const graphData = useMemo((): GraphData => {
         const nodes: GraphNode[] = [];
         const links: GraphLink[] = [];
@@ -64,6 +115,7 @@ export const GraphTab = () => {
             return { nodes, links };
         }
 
+        // Источник
         nodes.push({
             id: 'src',
             label: context.src.ip,
@@ -71,14 +123,18 @@ export const GraphTab = () => {
             val: 12,
         });
 
+        // Цель (C2)
         nodes.push({
             id: 'dst',
             label: context.dst.ip,
             group: 2,
             val: 14,
         });
+
+        // Связь источник → цель
         links.push({ source: 'src', target: 'dst' });
 
+        // Соседние алерты (тоже C2-узлы)
         const neighborAlerts = context.neighbor_alerts || [];
         neighborAlerts.forEach((alertItem: any, index: number) => {
             const nodeId = `c2-${index}`;
@@ -88,6 +144,7 @@ export const GraphTab = () => {
                 group: 3,
                 val: 10,
             });
+            // Связь цель → сосед
             links.push({ source: 'dst', target: nodeId });
         });
 
@@ -96,7 +153,7 @@ export const GraphTab = () => {
 
     const quickMetrics = useMemo(() => {
         if (!context || !alert) return null;
-        const totalAlerts = context.neighbor_alerts?.length + 1 || 1;
+        const totalAlerts = (context.neighbor_alerts?.length || 0) + 1;
         const uniqueIps = new Set([
             context.src?.ip,
             context.dst?.ip,
@@ -114,21 +171,21 @@ export const GraphTab = () => {
 
     const handleFit = () => {
         if (graphRef.current) {
-            graphRef.current.zoomToFit(300);
+            graphRef.current.zoomToFit(400, 60);
         }
     };
 
     const handleZoomIn = () => {
         if (graphRef.current) {
             const currentZoom = graphRef.current.zoom();
-            graphRef.current.zoom(currentZoom * 1.2);
+            graphRef.current.zoom(currentZoom * 1.2, 300);
         }
     };
 
     const handleZoomOut = () => {
         if (graphRef.current) {
             const currentZoom = graphRef.current.zoom();
-            graphRef.current.zoom(currentZoom * 0.8);
+            graphRef.current.zoom(currentZoom * 0.8, 300);
         }
     };
 
@@ -146,9 +203,9 @@ export const GraphTab = () => {
         }
     };
 
-    // Функция обновления данных (заглушка)
     const handleRefresh = () => {
-        toast.info('Данные обновлены (mock)');
+        refetchOsBanners();
+        toast.info('Данные обновлены');
     };
 
     if (!context || !context.src || !context.dst) {
@@ -221,40 +278,80 @@ export const GraphTab = () => {
                     </TabsList>
                 </div>
 
+                {/* ============================================================ */}
                 {/* Вкладка Граф */}
+                {/* ============================================================ */}
                 <TabsContent value="graph" className="mt-4">
                     <div className="relative w-full h-[600px] bg-zinc-50 dark:bg-zinc-950 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
                         <ForceGraph2D
                             ref={graphRef}
                             graphData={graphData}
                             nodeLabel="label"
-                            nodeColor={(node: any) => {
-                                if (node.group === 1) return '#3b82f6';
-                                if (node.group === 2) return '#ef4444';
-                                return '#f59e0b';
-                            }}
                             nodeVal={(node: any) => node.val || 10}
-                            linkColor={() => 'rgba(100, 100, 100, 0.3)'}
+                            nodeRelSize={4}
+                            linkColor={() => 'rgba(120, 120, 120, 0.5)'}
                             linkWidth={2}
                             linkDirectionalParticles={2}
                             linkDirectionalParticleWidth={1.5}
+                            linkDirectionalParticleColor={() => '#20f0e7'}
                             backgroundColor="transparent"
-                            cooldownTicks={100}
+                            cooldownTicks={120}
+                            warmupTicks={50}
+                            d3AlphaDecay={0.02}
+                            d3VelocityDecay={0.3}
                             onEngineStop={() => {
                                 setTimeout(() => {
                                     if (graphRef.current) {
-                                        graphRef.current.zoomToFit(300);
+                                        graphRef.current.zoomToFit(400, 80);
                                     }
-                                }, 100);
+                                }, 150);
                             }}
                             nodeCanvasObject={(node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-                                const label = node.label || node.id;
-                                const fontSize = 10 / globalScale;
-                                ctx.font = `${fontSize}px "Geist", "Inter", system-ui, sans-serif`;
+                                const label = String(node.label || node.id || '');
+                                const group = node.group || 3;
+                                const color = NODE_COLORS[group] || '#f59e0b';
+
+                                // Размер круга — от val
+                                const size = Math.sqrt(node.val || 10) * 2;
+
+                                // 1. Круг узла
+                                ctx.beginPath();
+                                ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                                ctx.fillStyle = color;
+                                ctx.fill();
+
+                                // Обводка круга — для контраста
+                                ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+                                ctx.lineWidth = 1.5 / globalScale;
+                                ctx.stroke();
+
+                                // 2. Подпись под узлом
+                                const fontSize = Math.max(12 / globalScale, 3);
+                                ctx.font = `600 ${fontSize}px "Geist", "Inter", system-ui, sans-serif`;
                                 ctx.textAlign = 'center';
-                                ctx.textBaseline = 'middle';
+                                ctx.textBaseline = 'top';
+
+                                // Фон под текстом — для читаемости на светлом
+                                const textWidth = ctx.measureText(label).width;
+                                const padding = 3 / globalScale;
+                                const textY = node.y + size + 2 / globalScale;
+                                ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+                                ctx.fillRect(
+                                    node.x - textWidth / 2 - padding,
+                                    textY - padding,
+                                    textWidth + padding * 2,
+                                    fontSize + padding * 2,
+                                );
+
                                 ctx.fillStyle = '#18181b';
-                                ctx.fillText(label, node.x, node.y + 16);
+                                ctx.fillText(label, node.x, textY);
+                            }}
+                            nodePointerAreaPaint={(node: any, color: string, ctx: CanvasRenderingContext2D) => {
+                                const size = Math.sqrt(node.val || 10) * 2;
+                                ctx.beginPath();
+                                ctx.arc(node.x, node.y, size + 4, 0, 2 * Math.PI, false);
+                                ctx.fillStyle = color;
+                                ctx.fill();
                             }}
                         />
                         <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm p-1.5 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-lg">
@@ -273,7 +370,7 @@ export const GraphTab = () => {
                                 <Download className="w-4 h-4" />
                             </Button>
                         </div>
-                        <div className="absolute top-4 left-4 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none">
+                        <div className="absolute top-4 left-4 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none bg-white/70 dark:bg-zinc-900/70 px-2 py-1 rounded">
                             <span className="inline-block w-3 h-3 rounded-full bg-blue-500 mr-1"></span> Источник
                             <span className="inline-block w-3 h-3 rounded-full bg-red-500 ml-3 mr-1"></span> Цель (C2)
                             <span className="inline-block w-3 h-3 rounded-full bg-amber-500 ml-3 mr-1"></span> C2 соседние
@@ -281,7 +378,9 @@ export const GraphTab = () => {
                     </div>
                 </TabsContent>
 
+                {/* ============================================================ */}
                 {/* Вкладка Таймлайн */}
+                {/* ============================================================ */}
                 <TabsContent value="timeline" className="mt-4">
                     <div className="bg-zinc-50 dark:bg-zinc-950 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800 min-h-[400px]">
                         <div className="flex justify-between items-center mb-4">
@@ -316,7 +415,9 @@ export const GraphTab = () => {
                     </div>
                 </TabsContent>
 
+                {/* ============================================================ */}
                 {/* Вкладка Трафик */}
+                {/* ============================================================ */}
                 <TabsContent value="traffic" className="mt-4">
                     <div className="bg-zinc-50 dark:bg-zinc-950 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800">
                         <div className="flex justify-between items-center mb-4">
@@ -375,39 +476,83 @@ export const GraphTab = () => {
                     </div>
                 </TabsContent>
 
+                {/* ============================================================ */}
                 {/* Вкладка ОС / Баннеры */}
+                {/* ============================================================ */}
                 <TabsContent value="os" className="mt-4">
                     <div className="bg-zinc-50 dark:bg-zinc-950 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800">
                         <div className="flex justify-between items-center mb-4">
                             <h4 className="text-sm font-medium">ОС клиентов и баннеры серверов</h4>
-                            <Button variant="outline" size="sm" onClick={handleRefresh}>
-                                <RefreshCw className="w-3 h-3 mr-1" /> Обновить
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleRefresh}
+                                disabled={osBannersLoading}
+                            >
+                                <RefreshCw className={`w-3 h-3 mr-1 ${osBannersLoading ? 'animate-spin' : ''}`} />
+                                Обновить
                             </Button>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">Операционные системы клиентов</h5>
-                                <ul className="space-y-1 text-sm">
-                                    <li className="flex justify-between"><span>Microsoft Windows 10</span><span className="font-mono">64</span></li>
-                                    <li className="flex justify-between"><span>Microsoft Windows Server 2019</span><span className="font-mono">12</span></li>
-                                    <li className="flex justify-between"><span>Linux (Ubuntu 20.04)</span><span className="font-mono">8</span></li>
-                                    <li className="flex justify-between"><span>macOS 12</span><span className="font-mono">3</span></li>
-                                </ul>
+
+                        {osBannersLoading ? (
+                            <div className="flex items-center justify-center py-12 text-zinc-500">
+                                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                <span className="text-sm">Загрузка данных...</span>
                             </div>
-                            <div>
-                                <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">Баннеры серверов по числу сессий</h5>
-                                <ul className="space-y-1 text-sm">
-                                    <li className="flex justify-between"><span>Windows Server 2022</span><span className="font-mono">1</span></li>
-                                    <li className="flex justify-between"><span>Windows Server 2019</span><span className="font-mono">1</span></li>
-                                    <li className="flex justify-between"><span>nginx/1.18.0</span><span className="font-mono">2</span></li>
-                                    <li className="flex justify-between"><span>Apache/2.4.52</span><span className="font-mono">1</span></li>
-                                </ul>
+                        ) : osBannersError ? (
+                            <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-3 rounded text-sm">
+                                Ошибка загрузки данных с бэкенда. Попробуйте обновить страницу.
                             </div>
-                        </div>
+                        ) : !hasOsData ? (
+                            <div className="text-center py-12 text-zinc-500 dark:text-zinc-400">
+                                <p className="text-sm">
+                                    {osBanners.has_context === false
+                                        ? 'Сначала соберите контекст, чтобы увидеть ОС и баннеры.'
+                                        : 'Нет данных для отображения.'}
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                                        Операционные системы клиентов
+                                    </h5>
+                                    <ul className="space-y-1 text-sm">
+                                        {Object.entries(osBanners.client_os).map(([os, count]) => (
+                                            <li key={os} className="flex justify-between">
+                                                <span>{os}</span>
+                                                <span className="font-mono">{count}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                                        Баннеры серверов по числу сессий
+                                    </h5>
+                                    <ul className="space-y-1 text-sm">
+                                        {Object.entries(osBanners.server_banners).map(([banner, count]) => (
+                                            <li key={banner} className="flex justify-between">
+                                                <span>{banner}</span>
+                                                <span className="font-mono">{count}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+
+                        {osBanners.generated_at && hasOsData && (
+                            <div className="mt-4 text-xs text-zinc-400">
+                                Обновлено: {new Date(osBanners.generated_at).toLocaleString()}
+                            </div>
+                        )}
                     </div>
                 </TabsContent>
 
+                {/* ============================================================ */}
                 {/* Вкладка Обзор сети */}
+                {/* ============================================================ */}
                 <TabsContent value="overview" className="mt-4">
                     <div className="bg-zinc-50 dark:bg-zinc-950 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800">
                         <div className="flex justify-between items-center mb-4">
@@ -435,7 +580,9 @@ export const GraphTab = () => {
                             </div>
                         </div>
                         <div className="mt-4">
-                            <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">Локализация / Основные узлы</h5>
+                            <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">
+                                Локализация / Основные узлы
+                            </h5>
                             <div className="flex flex-wrap gap-1">
                                 {['edge.microsoft.com', 'assets.msn.com', 'ntp-msn-com-world-atm-default.trafficmanager.net', 'img-s-msn-com.akamaized.net', '10.0.15.15', '10.0.30.2', 'dc-victim2.vulnerable.local', 'dc-victim.vulnerable.local', 'r.msftstatic.com', '51.132.193.105'].map((item) => (
                                     <span key={item} className="inline-block px-2 py-1 bg-zinc-200 dark:bg-zinc-700 rounded text-xs font-mono">{item}</span>

@@ -1,4 +1,4 @@
-# Logs
+# ===== Логи =====
 logs
 *.log
 npm-debug.log*
@@ -6,19 +6,164 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
+
+# ===== Зависимости =====
 node_modules
+.pnp
+.pnp.js
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ===== Сборка =====
 dist
 dist-ssr
-*.local
+build
+out
+.vite
+node_modules/.vite
+node_modules/.cache
 
-# Editor directories and files
+# ===== Переменные окружения =====
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.production.local
+!.env.example
+
+# ===== Docker-артефакты =====
+*.tar
+*.tar.gz
+traceai-frontend.tar
+traceai-backend.tar
+
+# ===== Кеши линтеров и тестов =====
+.eslintcache
+.stylelintcache
+.cache
+coverage
+.nyc_output
+
+# ===== IDE и редакторы =====
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+
+# ===== ОС-специфичное =====
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+desktop.ini
+ehthumbs.db
+
+# ===== Временные файлы =====
+*.tmp
+*.temp
+*.bak
+*.orig
+*~
+
+# ===== TypeScript =====
+*.tsbuildinfo
+*.d.ts.map
+
+# ===== Секреты и ключи =====
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+certs/
+
+# ===== Certbot / SSL =====
+/etc/letsencrypt/
+letsencrypt/
+
+# ===== Локальные базы данных =====
+*.sqlite
+*.sqlite3
+*.db
+
+# ===== Данные Docker =====
+data/
+/opt/traceai/data/
+
+# ===== AI/LLM-кеши =====
+.ollama/
+.chroma/
+chroma_db/
+ollama_models/
+
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# ===== Docker / сервер / деплой =====
+*.tar
+*.tar.gz
+*.tar.zip
+*.tar.bz2
+backend.tar
+frontend.tar
+traceai-backend.tar
+traceai-frontend.tar
+
+# Серверные конфиги (не в репо — только на сервере)
+certs/
+*.pem
+*.key
+*.crt
+*.csr
+nginx/certs/
+
+# Данные и volume'ы
+data/
+*.rdb
+dump.rdb
+
+# Скрипты деплоя с секретами
+deploy.sh
+deploy.ps1
+push.sh
+push.ps1
+*.secret
+secrets/
+
+# Docker-compose override с личными настройками
+docker-compose.override.yml
+docker-compose.local.yml
+
+# ===== Python (если есть) =====
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+
+# ===== ОС =====
+Thumbs.db
+Desktop.ini
+*.tar
+*.tar.zip
+*.tar.gz
+*.tar.bz2

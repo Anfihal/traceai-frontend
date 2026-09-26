@@ -1,0 +1,13 @@
+{
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.includeLanguages": {
+        "plaintext": "html"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "liveServer.settings.port": 5501
+}

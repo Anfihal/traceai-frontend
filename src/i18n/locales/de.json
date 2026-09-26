@@ -145,17 +145,136 @@
         "statsAccuracy": "Genauigkeit von Hypothesen und Kontext",
         "featuresTag": "FUNKTIONEN",
         "featuresTitle": "Intelligente Cybersicherheitsfunktionen",
+        "features": [
+            {
+                "title": "KI-native Analyse",
+                "desc": "Die KI hilft, Hypothesen zu erstellen, Ereignisse zu verknüpfen und Untersuchungen zu beschleunigen.",
+                "tone": "cyan"
+            },
+            {
+                "title": "Intelligente Angriffsanalyse",
+                "desc": "Sammelt Kontext aus mehreren Quellen und zeigt das Wesentliche – ohne Informationsrauschen.",
+                "tone": "dark"
+            },
+            {
+                "title": "Szenario-Generierung",
+                "desc": "Hilft, den nächsten Untersuchungsschritt schnell zu definieren und eine Hypothese zu prüfen.",
+                "tone": "light"
+            },
+            {
+                "title": "Integration in den Arbeitsbereich",
+                "desc": "Alle Artefakte, Ereignisse und Schlussfolgerungen an einem Ort.",
+                "tone": "dark"
+            },
+            {
+                "title": "Zero-Trust-Modelltraining",
+                "desc": "Isolierte Datenverarbeitung und kontrollierte KI-Umgebung.",
+                "tone": "dark"
+            },
+            {
+                "title": "24/7-Untersuchungsassistent",
+                "desc": "Die KI begleitet den Analysten in jeder Phase der Untersuchung.",
+                "tone": "cyan"
+            }
+        ],
         "processTag": "PROZESS",
         "processTitle": "Wie TraceAI Ihr System schützt",
+        "steps": [
+            {
+                "num": "01",
+                "title": "Sofortige Ersteinschätzung",
+                "desc": "TraceAI sammelt automatisch den Ereigniskontext und hebt die wichtigsten Indikatoren hervor."
+            },
+            {
+                "num": "02",
+                "title": "Hypothesengenerierung und -prüfung",
+                "desc": "Die KI hilft, Angriffsversionen zu formulieren und sie schnell anhand der verfügbaren Daten zu prüfen."
+            },
+            {
+                "num": "03",
+                "title": "KI-interaktiver Bericht",
+                "desc": "Das Untersuchungsergebnis wird zu einem klaren Bericht – ohne manuelle Routine."
+            },
+            {
+                "num": "04",
+                "title": "Lokalisierung mit einem Klick",
+                "desc": "Der nächste Schritt ist direkt aus dem Arbeitsbereich des Analysten verfügbar."
+            }
+        ],
+        "videoBadge": "VIDEO",
+        "videoTitle": "Demonstration des Systems",
+        "videoLead": "Sehen Sie, wie TraceAI den Weg vom Ereignis bis zur klaren Schlussfolgerung des Analysten verkürzt.",
+        "videoCta": "Demo ansehen",
+        "videoCaption": "TraceAI / SOC workflow",
         "expertsTag": "EXPERTEN",
         "expertsTitle": "Was CISO und SOC-Leiter sagen",
+        "aboutBadge": "ÜBER UNS",
+        "aboutTitle": "TraceAI – eine Entwicklung von Infinite Leaders Tech",
+        "aboutLead": "Infinite Leaders Tech entwickelt Werkzeuge für SOC-Analysten und Cybersicherheits-Ingenieure. TraceAI ist unsere KI-gestützte Plattform zur Vorfalluntersuchung, aufgebaut auf realer Erfahrung aus dem Produktions-SOC.",
+        "aboutHighlights": [
+            {
+                "title": "SOC-Expertise",
+                "desc": "Ein Team mit praktischer Erfahrung aus realen Vorfällen und Produktions-SOC-Umgebungen."
+            },
+            {
+                "title": "Enterprise-Ansatz",
+                "desc": "Architektur, bereit für Lasten großer Infrastrukturen und SIEM-/SOAR-Integrationen."
+            },
+            {
+                "title": "KI-Engineering",
+                "desc": "Eigene Untersuchungs-Pipelines und LLM-Betrieb in einer kontrollierten Umgebung."
+            }
+        ],
+        "aboutCaseBadge": "ERFAHRUNG",
+        "aboutCaseTitle": "Was wir für Positive Technologies entwickelt haben",
+        "aboutCaseText": "Unser Team hat Projekte für Positive Technologies umgesetzt – einen der Marktführer im Bereich Cybersicherheit. Diese Erfahrung hat TraceAI geprägt: das Verständnis realer SOC-Prozesse, der Anforderungen an die Vorfallanalyse und der Verarbeitung großer Ereignismengen. Wir haben in das Produkt übertragen, was Analysten an vorderster Linie tatsächlich brauchen – und nicht abstrakte Vorstellungen von einem „richtigen“ SOC.",
         "pricingTag": "TARIFE",
         "pricingTitle": "Flexible Pläne für Teams jeder Größe",
-        "ctaTag": "BEREIT ZU STARTEN?",
+        "pricingCta": "Mehr erfahren",
+        "pricingPlans": [
+            {
+                "name": "Community",
+                "price": "Kostenlos",
+                "lead": "Zum Kennenlernen des Ansatzes",
+                "features": [
+                    "KI-Untersuchungsassistent",
+                    "Kontext und Hypothesen",
+                    "Berichte und Verlauf"
+                ],
+                "highlight": false
+            },
+            {
+                "name": "SOC Team",
+                "price": "990 $/Monat",
+                "lead": "Für Produktions-SOC-Teams",
+                "features": [
+                    "Unbegrenzte Ereignisse",
+                    "Aufbau von Hypothesenbäumen",
+                    "API- & Webhook-Integrationen",
+                    "SIEM-/SOAR-Integration"
+                ],
+                "highlight": true
+            },
+            {
+                "name": "Enterprise",
+                "price": "Auf Anfrage",
+                "lead": "Für große Infrastrukturen",
+                "features": [
+                    "On-Premise-Bereitstellung",
+                    "Individuelles Modell-Fine-Tuning",
+                    "Persönlicher Architekt",
+                    "24/7-Vorfallunterstützung"
+                ],
+                "highlight": false
+            }
+        ],
+        "ctaTag": "KONTAKTIEREN SIE UNS",
         "ctaTitle": "Bereit, Ihre Cyberverteidigung zu stärken?",
-        "ctaText": "Wir zeigen TraceAI anhand Ihrer Szenarien und besprechen, wie KI in Ihren aktuellen SOC-Prozess integriert werden kann.",
-        "ctaButton": "Demo anfordern",
-        "emailPlaceholder": "Ihre Arbeits-E-Mail"
+        "ctaText": "Wir zeigen Ihnen, wie TraceAI in Ihren aktuellen SOC-Prozess passt, und präsentieren die Plattform anhand Ihrer Szenarien.",
+        "ctaButton": "Kontakt aufnehmen",
+        "emailPlaceholder": "Ihre Arbeits-E-Mail",
+        "footerTagline": "AI-native workspace for SOC analysts",
+        "footerCopyright": "© 2026 TraceAI · Infinite Leaders Tech"
     },
     "chat": {
         "title": "Chat-Assistent",
