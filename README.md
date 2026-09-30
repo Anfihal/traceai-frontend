@@ -1,5 +1,4 @@
 
-```markdown
 # TraceAI Frontend
 
 > **AI-native рабочее пространство для SOC-аналитика.**
@@ -298,5 +297,5 @@ Proprietary © 2026 Infinite Leaders Tech. Все права защищены.
 ---
 
 <p align="center">Сделано с ❤️ для SOC-аналитиков</p>
-```
+
 
